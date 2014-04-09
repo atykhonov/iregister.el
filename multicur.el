@@ -19,24 +19,10 @@
   "Add a fake cursor and possibly a fake active region overlay based on point and mark.
 Saves the current state in the overlay to be restored later."
   (let ((overlay (multicur-make-cursor-overlay-at-point)))
-    ;; (overlay-put overlay 'mc-id (or id (mc/create-cursor-id)))
     (overlay-put overlay 'type 'fake-cursor)
     (overlay-put overlay 'priority 100)
     (setq multicur-overlays (append multicur-overlays (list overlay)))
-    ;; (append multicur-overlays (list overlay))
-    ;; (mc/store-current-state-in-overlay overlay)
-    ;; (when (use-region-p)
-    ;;   (overlay-put overlay 'region-overlay
-    ;;                (mc/make-region-overlay-between-point-and-mark)))
     overlay))
-
-;; (defun mc/store-current-state-in-overlay (o)
-;;   "Store relevant info about point and mark in the given overlay."
-;;   (overlay-put o 'point (set-marker (make-marker) (point)))
-;;   (overlay-put o 'mark (set-marker (make-marker) (mark)))
-;;   (dolist (var mc/cursor-specific-vars)
-;;     (when (boundp var) (overlay-put o var (symbol-value var))))
-;;   o)
 
 (defun multicur-make-cursor-overlay-at-eol (pos)
   "Create overlay to look like cursor at end of line."
@@ -180,47 +166,3 @@ highlights the entire width of the window."
             (define-key map (kbd "d") 'multicur-delete-cursor)
             map)
   :group 'multicur)
-
-(defun multicur-save-history ()
-  "Save ido history and cache information between sessions."
-  (interactive)
-  (when (and ido-last-directory-list ido-save-directory-list-file)
-    (let ((buf (get-buffer-create " *ido session*"))
-	  (version-control 'never))
-      (unwind-protect
-	  (with-current-buffer buf
-	    (erase-buffer)
-	    (insert ";;; -*- coding: utf-8 -*-\n")
-	    (setq buffer-file-coding-system 'utf-8)
-	    (ido-pp 'ido-last-directory-list)
-	    (ido-pp 'ido-work-directory-list)
-	    (ido-pp 'ido-work-file-list)
-	    (ido-pp 'ido-dir-file-cache "\n\n ")
-	    (if (listp ido-unc-hosts-cache)
-		(ido-pp 'ido-unc-hosts-cache)
-	      (insert "\n;; ----- ido-unc-hosts-cache -----\nt\n"))
-	    (write-file ido-save-directory-list-file nil))
-	(kill-buffer buf)))))
-
-(defun multicur-load-history (&optional arg)
-  "Load ido history and cache information from previous session.
-With prefix argument, reload history unconditionally."
-  (interactive "P")
-  (if (or arg (and ido-save-directory-list-file (not ido-last-directory-list)))
-      (let ((file (expand-file-name ido-save-directory-list-file))
-	    buf)
-	(when (file-readable-p file)
-	  (setq buf (get-buffer-create " *ido session*"))
-	  (unwind-protect
-	      (with-current-buffer buf
-		(erase-buffer)
-		(insert-file-contents file)
-		(condition-case nil
-		    (setq ido-last-directory-list (read (current-buffer))
-			  ido-work-directory-list (read (current-buffer))
-			  ido-work-file-list (read (current-buffer))
-			  ido-dir-file-cache (read (current-buffer))
-			  ido-unc-hosts-cache (read (current-buffer)))
-		  (error nil)))
-	    (kill-buffer buf)))))
-  (ido-wash-history))
