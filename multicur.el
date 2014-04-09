@@ -108,6 +108,8 @@ highlights the entire width of the window."
 
 (defun multicur-switch-to-cursor ()
   (let ((multicur-buffer (get-buffer-create multicur-buffer-name)))
+    (when (= multicur-current-overlay -1)
+      (message "No more cursors."))
     (when (> multicur-current-overlay 0)
       (let* ((current-overlay (nth multicur-current-overlay multicur-overlays))
              (buffer-to-switch (overlay-buffer current-overlay))
