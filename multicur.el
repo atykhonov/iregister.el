@@ -98,6 +98,13 @@ highlights the entire width of the window."
           (message "No more cursors."))
       (multicur-switch-next))))
 
+(defun multicur-delete-all-cursors ()
+  (interactive)
+  (dolist (overlay multicur-overlays)
+    (delete-overlay overlay))
+  (setq multicur-overlays (list))
+  (setq multicur-current-overlay -1))
+
 (defun multicur-switch-next ()
   (interactive)
   (setq multicur-current-overlay (+ multicur-current-overlay 1))
