@@ -1,6 +1,3 @@
-;; (defvar mc--current-cursor-id 0
-;;   "Var to store increasing id of fake cursors, used to keep track of them for undo.")
-
 (defface multicur-cursor-face
   '((t (:inverse-video t)))
   "The face used for fake cursors"
