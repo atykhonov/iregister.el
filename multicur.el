@@ -8,13 +8,15 @@
 
 (defvar multicur-overlays (list))
 
-(defvar multicur-current-overlay 0)
+(defvar multicur-current-overlay -1)
 
 (defvar multicur-mode-map
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map)
     (define-key map "q" 'quit-window)
     map))
+
+(defvar multicur-buffer-name "*Multicur*")
 
 (defun multicur-create-fake-cursor-at-point ()
   "Add a fake cursor and possibly a fake active region overlay based on point and mark.
@@ -92,50 +94,79 @@ highlights the entire width of the window."
         (goto-char (overlay-start overlay))
         (setq found t)))))
 
-(defun multicur-switch ()
+(defun multicur-switch-next ()
   (interactive)
-  (let* ((multicur-buffer (get-buffer-create "*Multicur*"))
+  (setq multicur-current-overlay (+ multicur-current-overlay 1))
+  (when (> multicur-current-overlay (- (length multicur-overlays) 1))
+    (setq multicur-current-overlay 0))
+  (multicur-switch))
+
+(defun multicur-switch-previous ()
+  (interactive)
+  (setq multicur-current-overlay (- multicur-current-overlay 1))
+  (when (< multicur-current-overlay 0)
+    (setq multicur-current-overlay (- (length multicur-overlays) 1)))
+  (multicur-switch))
+
+(defun multicur-switch ()
+  (let* ((multicur-buffer (get-buffer-create multicur-buffer-name))
          (current-overlay (nth multicur-current-overlay multicur-overlays))
          (buffer-to-switch (overlay-buffer current-overlay))
-         (overlay-start (overlay-start current-overlay)))
-    ;; (switch-to-buffer-other-window multicur-buffer t)
-    ;; (pop-to-buffer-same-window multicur-buffer t)
-    (setq multicur-current-overlay (+ multicur-current-overlay 1))
-    (when (> multicur-current-overlay (- (length multicur-overlays) 1))
-      (setq multicur-current-overlay 0))
-    ;; (with-temp-buffer-window multicur-buffer nil nil
-    ;; (with-output-to-temp-buffer multicur-buffer
-    ;;   (set-buffer multicur-buffer)
-    (pop-to-buffer multicur-buffer)
-    (shrink-window 10)
-    (with-current-buffer multicur-buffer
-      (multicur-minor-mode 1)
-      (erase-buffer)
-      (let ((buffer-content nil)
-            (start-point nil)
-            (end-point nil)
-            (future-point nil))
-        (with-current-buffer buffer-to-switch
-          (goto-char overlay-start)
-          (save-excursion
-            (previous-line 10)
-            (beginning-of-line)
-            (setq start-point (point))
-            (setq future-point (- overlay-start start-point)))
-          (next-line 10)
-          (beginning-of-line)
-          (setq end-point (point))
-          (setq buffer-content (buffer-substring start-point end-point)))
-        (insert buffer-content)
-        (goto-char future-point)
-        (recenter)))))
+         (overlay-start (overlay-start current-overlay))
+         (shrink-window-p t))
+    (when (and (bufferp buffer-to-switch)
+               (buffer-live-p buffer-to-switch))
+      (when (display-buffer-reuse-window multicur-buffer nil)
+        (setq shrink-window-p nil))
+      (pop-to-buffer multicur-buffer)
+      (when shrink-window-p
+        (shrink-window 10))
+      (with-current-buffer multicur-buffer
+        (multicur-minor-mode 1)
+        (erase-buffer)
+        (let ((buffer-content nil)
+              (start-point nil)
+              (end-point nil)
+              (future-point nil))
+          (with-current-buffer buffer-to-switch
+            (goto-char overlay-start)
+            (save-excursion
+              (forward-line -10)
+              (beginning-of-line)
+              (setq start-point (point))
+              (setq future-point (- overlay-start start-point)))
+            (save-excursion
+              (forward-line 10)
+              (beginning-of-line)
+              (setq end-point (point)))
+            (setq buffer-content (buffer-substring start-point end-point)))
+          (insert buffer-content)
+          (goto-char future-point)
+          (recenter))))))
+
+(defun multicur-select ()
+  (interactive)
+  (let* ((current-overlay (nth multicur-current-overlay multicur-overlays))
+         (buffer-to-switch (overlay-buffer current-overlay)))
+    (kill-buffer-and-window)
+    (switch-to-buffer buffer-to-switch)
+    (with-current-buffer buffer-to-switch
+      (goto-char (overlay-start current-overlay)))))
+
+(defun multicur-kill-buffer ()
+  (interactive)
+  (kill-buffer))
 
 (define-minor-mode multicur-minor-mode
   "Toggle multicur minor mode."
   :lighter " MultiCur"
   :keymap (let ((map (make-sparse-keymap)))
             (suppress-keymap map)
-            (define-key map "q" 'quit-window)
+            (define-key map "q" 'kill-buffer-and-window)
+            (define-key map (kbd "RET") 'multicur-select)
+            (define-key map (kbd "M-n") 'multicur-switch-next)
+            (define-key map (kbd "M-p") 'multicur-switch-previous)
+            ;; (define-key map (kbd "RET") 'multicur-select)
             map)
   :group 'multicur)
 
