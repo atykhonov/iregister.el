@@ -166,3 +166,8 @@ highlights the entire width of the window."
             (define-key map (kbd "d") 'multicur-delete-cursor)
             map)
   :group 'multicur)
+
+
+(provide 'multicur)
+
+;;; multicur.el ends here
