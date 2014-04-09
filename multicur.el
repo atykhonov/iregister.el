@@ -58,10 +58,6 @@ highlights the entire width of the window."
       (multicur-make-cursor-overlay-at-eol (point))
     (multicur-make-cursor-overlay-inline (point))))
 
-;; (defun mc/create-cursor-id ()
-;;   "Returns a unique cursor id"
-;;   (incf mc--current-cursor-id))
-
 (defun multicur-all-fake-cursors (&optional start end)
   (remove-if-not 'multicur-fake-cursor-p
                  (overlays-in (or start (point-min))
@@ -90,6 +86,13 @@ highlights the entire width of the window."
                     (point)))
         (goto-char (overlay-start overlay))
         (setq found t)))))
+
+(defun multicur-delete-cursor ()
+  (interactive)
+  (let ((current-overlay (nth multicur-current-overlay multicur-overlays)))
+    (setq multicur-overlays (delq current-overlay multicur-overlays))
+    (delete-overlay current-overlay)
+    (multicur-switch-next)))
 
 (defun multicur-switch-next ()
   (interactive)
@@ -163,6 +166,7 @@ highlights the entire width of the window."
             (define-key map (kbd "RET") 'multicur-select)
             (define-key map (kbd "M-n") 'multicur-switch-next)
             (define-key map (kbd "M-p") 'multicur-switch-previous)
+            (define-key map (kbd "d") 'multicur-delete-cursor)
             ;; (define-key map (kbd "RET") 'multicur-select)
             map)
   :group 'multicur)
