@@ -96,7 +96,7 @@ highlights the entire width of the window."
         (progn
           (kill-buffer-and-window)
           (message "No more cursors."))
-      (multicur-switch-next))))
+      (multicur-switch-to-next-cursor))))
 
 (defun multicur-delete-all-cursors ()
   (interactive)
@@ -105,14 +105,14 @@ highlights the entire width of the window."
   (setq multicur-overlays (list))
   (setq multicur-current-overlay -1))
 
-(defun multicur-switch-next ()
+(defun multicur-switch-to-next-cursor ()
   (interactive)
   (setq multicur-current-overlay (+ multicur-current-overlay 1))
   (when (> multicur-current-overlay (- (length multicur-overlays) 1))
     (setq multicur-current-overlay 0))
   (multicur-switch))
 
-(defun multicur-switch-previous ()
+(defun multicur-switch-to-previous-cursor ()
   (interactive)
   (setq multicur-current-overlay (- multicur-current-overlay 1))
   (when (< multicur-current-overlay 0)
@@ -175,10 +175,9 @@ highlights the entire width of the window."
             (suppress-keymap map)
             (define-key map "q" 'kill-buffer-and-window)
             (define-key map (kbd "RET") 'multicur-select)
-            (define-key map (kbd "M-n") 'multicur-switch-next)
-            (define-key map (kbd "M-p") 'multicur-switch-previous)
+            (define-key map (kbd "M-n") 'multicur-switch-to-next-cursor)
+            (define-key map (kbd "M-p") 'multicur-switch-to-previous-cursor)
             (define-key map (kbd "d") 'multicur-delete-cursor)
-            ;; (define-key map (kbd "RET") 'multicur-select)
             map)
   :group 'multicur)
 
