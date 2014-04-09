@@ -92,7 +92,11 @@ highlights the entire width of the window."
   (let ((current-overlay (nth multicur-current-overlay multicur-overlays)))
     (setq multicur-overlays (delq current-overlay multicur-overlays))
     (delete-overlay current-overlay)
-    (multicur-switch-next)))
+    (if (= (length multicur-overlays) 0)
+        (progn
+          (kill-buffer-and-window)
+          (message "No more cursors."))
+      (multicur-switch-next))))
 
 (defun multicur-switch-next ()
   (interactive)
