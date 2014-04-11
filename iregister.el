@@ -69,7 +69,12 @@
 ;; (require 'iregister)
 ;; (global-set-key (kbd "M-n") 'iregister-jump-to-next-marker)
 ;; (global-set-key (kbd "M-p") 'iregister-jump-to-previous-marker)
-;; (global-set-key (kbd "M-u") 'iregister-point-to-register)
+;; (global-set-key (kbd "M-u") 'iregister-point-or-text-to-register)
+;;
+;; If region is active then `iregister-point-or-text-to-register' command stores a
+;; text to any empty register, otherwise it stores a point.
+
+;; (global-set-key (kbd "M-l") 'iregister-text)
 ;;
 ;; Change the key bindings to your liking.
 
@@ -129,6 +134,14 @@ required to jump.")
   (interactive)
   (remove-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook)
   (minibuffer-keyboard-quit))
+
+(defun iregister-point-or-text-to-register ()
+  "Store point or text to any empty register. If region is active
+then store a text, otherwise a point."
+  (interactive)
+  (if (region-active-p)
+      (iregister-copy-to-register)
+    (iregister-point-to-register)))
 
 ;; Interactive registers with markers
 
