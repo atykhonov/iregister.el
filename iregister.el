@@ -27,24 +27,38 @@
 
 ;;
 ;; This package is built on top of register.el package and it allows to use registers
-;; interactively.  For now it does wrap only functionality which relates to points
-;; (`register-to-point', `point-to-register').
+;; interactively.
 ;;
-;; Assuming that there are already stored (by means of `point-to-register') some
-;; points in the registers (in current Emacs session).  Execute, for example,
-;; `iregister-jump-to-next-marker' and the minibuffer will display the snippet of the
-;; stored point's buffer.  That snippet will contain the text arround of stored point
-;; which allows to figure out whether is that right place to be jumped in or not.
-;; If yes, then just hit the `RET' and the right buffer will be displayed and the
-;; point will be in the same place as it was stored before.  If no, then try to hit
-;; `M-n' (`iregister-jump-to-next-marker') or `M-p' (`iregister-jump-to-previous-marker')
-;; to view next/previous markers (points) previously stored in the registry.  In the
-;; meantime, in the minibuffer, you could hit `d' key to delete current point from
-;; the register.  To quit from the minibuffer press `q' key.
+;; Jump to the markers (stored in the registers) interactivelly.
+;;
+;; Assuming that there are already stored some points (by means of
+;; `point-to-register' or `iregister-point-to-register' command) in the
+;; registers. Execute, for example, `iregister-jump-to-next-marker' and the
+;; minibuffer will display the snippet of the stored point's buffer. That snippet
+;; will contain the text arround of stored point which allows to figure out whether
+;; is that right place to be jumped in or not. If yes, then just hit the `RET' and
+;; the right buffer will be displayed and the point will be in the same place as it
+;; was stored before. If no, then try to hit `n' key or `p' key to view next/previous
+;; markers (points) previously stored in the registers. In the meantime, in the
+;; minibuffer, you could hit `d' key to delete current point from the register. To
+;; quit from the minibuffer press `q' key (or C-g).
 ;;
 ;; Optionally you could use `iregister-point-to-register' command from any buffer to
 ;; store current point to register.  That command executes without any prompt, it just
 ;; finds any empty register and stores there current point.
+;; 
+;; Insert (append/prepend) the texts (stored in the registers) interactivelly.
+;;
+;; Assuming that there are already stored some texts (by means of `copy-to-register'
+;; or `iregister-copy-to-register' command) in the registers. Execute, for example,
+;; `iregister-next-text' and the minibuffer will display the text stored in some
+;; register. In the appeared minibuffer you can figure out whether is that right text
+;; to be inserted or not. If yes, then just hit the `RET' and the text will be
+;; inserted. If no, then try to hit `n' key or `p' key to view next/previous texts
+;; previously stored in the registers. In the meantime, in the minibuffer, you could
+;; hit `d' key to delete current text from the register. To quit from the minibuffer
+;; press `q' key (or C-g). Also you could use `a' key for appending or `A' key for
+;; prepending selected text to the current text registry.
 ;;
 
 ;; Installation:
@@ -293,7 +307,7 @@ registers."
       (progn
         (setq iregister-action 'next)
         (exit-minibuffer))
-    (iregister--text)))
+    (iregister-text)))
 
 (defun iregister-previous-text ()
   "If the minibuffer is the current buffer then jump to the
@@ -308,10 +322,11 @@ from the registers."
       (progn
         (setq iregister-action 'previous)
         (exit-minibuffer))
-    (iregister--text)))
+    (iregister-text)))
 
-(defun iregister--text ()
+(defun iregister-text ()
   "Show the minibuffer with the current text."
+  (interactive)
   (when (= (iregister-elements-with-strings-length) 0)
     (message "No more registers with strings."))
   (when (> (iregister-elements-with-strings-length) 0)
@@ -325,15 +340,15 @@ from the registers."
        iregister-minibuffer-text-keymap)
       (when (equal iregister-action 'append)
         (append-to-register register-name (region-beginning) (region-end))
-        (iregister--text))
+        (iregister-text))
       (when (equal iregister-action 'prepend)
         (prepend-to-register register-name (region-beginning) (region-end))
-        (iregister--text))
+        (iregister-text))
       (when (equal iregister-action 'insert)
         (insert register-string))
       (when (or (equal iregister-action 'next)
                 (equal iregister-action 'previous))
-        (iregister--text))
+        (iregister-text))
       (setq iregister-action nil))))
 
 (defun iregister-append-text ()
