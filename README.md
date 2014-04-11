@@ -28,15 +28,15 @@ current point.
 ###### Insert (append/prepend) interactivelly the texts stored in the registers.
 
 Assuming that there are already stored some texts (by means of `copy-to-register` or
-`iregister-copy-to-register` command) in the registers. Execute, for example,
-`iregister-next-text` and the minibuffer will display the text stored in some
-register. In the appeared minibuffer you can figure out whether is that right text to
-be inserted or not. If yes, then just hit the `RET` and the text will be inserted. If
-no, then try to hit `n` key or `p` key to view next/previous texts previously stored
-in the registers. In the meantime, in the minibuffer, you could hit `d` key to delete
-current text from the register. To quit from the minibuffer press `q` key (or
-C-g). Also you could use `a` key for appending or `A` key for prepending selected
-text to the current text registry.
+`iregister-copy-to-register` command) in the registers. Execute `iregister-text` and
+the minibuffer will display the text stored in some register. In the appeared
+minibuffer you can figure out whether is that right text to be inserted or not. If
+yes, then just hit the `RET` and the text will be inserted. If no, then try to hit
+`n` key or `p` key to view next/previous texts previously stored in the registers. In
+the meantime, in the minibuffer, you could hit `d` key to delete current text from
+the register. To quit from the minibuffer press `q` key (or C-g). Also you could use
+`a` key for appending or `A` key for prepending selected text to the current text
+registry.
 
 Optionally you could use `iregister-copy-to-register` command from any buffer to
 store selected text to a register. That command works exactly as `copy-to-register`
