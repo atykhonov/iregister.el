@@ -1,6 +1,8 @@
-# iregister - Interactive register commands for Emacs.
+# iregister
 
 ### Summary
+
+iregister - Interactive register commands for Emacs.
 
 This package is built on top of register.el package and it allows to use registers
 interactively. For now it does wrap only functionality which relates to points
