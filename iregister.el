@@ -63,15 +63,22 @@
 
 
 
-(defvar iregister-current-marker-register 0)
+(defvar iregister-current-marker-register 0
+  "An index to the current marker register.")
 
-(defvar iregister-current-text-register 0)
+(defvar iregister-current-text-register 0
+  "An index to the current text register.")
 
-(defvar iregister-action nil)
+(defvar iregister-action nil
+  "Temp variable to allow to take right action after minibuffer
+exit.")
 
-(defvar iregister-minibuffer-position nil)
+(defvar iregister-minibuffer-position nil
+  "Temp variable which holds a point position to which it is
+required to jump.")
 
 (defvar iregister-minibuffer-marker-keymap
+  "Keymap for the minibuffer when display a marker register."
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map)
     (define-key map "q" 'iregister-minibuffer-keyboard-quit)
@@ -84,6 +91,7 @@
     map))
 
 (defvar iregister-minibuffer-text-keymap
+  "Keymap for minibuffer when display a text register."
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map)
     (define-key map "q" 'iregister-minibuffer-keyboard-quit)
