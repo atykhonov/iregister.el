@@ -61,6 +61,7 @@
 
 ;;; Code:
 
+
 
 (defvar iregister-current-marker-register 0)
 
@@ -97,6 +98,26 @@
     (define-key map (kbd "s") 'iregister-save-text-to-register)
     map))
 
+
+
+;; Common
+
+(defun iregister-minibuffer-keyboard-quit ()
+  "A thin wrapper arround `minibuffer-keyboard-quit'."
+  (interactive)
+  (remove-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook)
+  (minibuffer-keyboard-quit))
+
+;; Interactive registers with markers
+
+(defun iregister-minibuffer-setup-hook ()
+  "Setup hook to be triggered after entering minibuffer."
+  (interactive)
+  (when iregister-minibuffer-position
+    (goto-char iregister-minibuffer-position))
+  (setq iregister-minibuffer-position nil)
+  (recenter-top-bottom))
+
 (defun iregister-point-to-register ()
   (interactive)
   (let ((idx 0)
@@ -108,6 +129,11 @@
         (point-to-register idx))
       (setq idx (+ idx 1)))))
 
+(defun iregister-jump-to-current-marker ()
+  (interactive)
+  (setq iregister-action 'jump)
+  (exit-minibuffer))
+
 (defun iregister-delete-marker-register ()
   (interactive)
   (let* ((register-element (car (nthcdr iregister-current-marker-register
@@ -115,32 +141,6 @@
          (register-name (car register-element)))
     (set-register register-name nil)
     (iregister-jump-to-next-marker)))
-
-(defun iregister-delete-text-register ()
-  (interactive)
-  (let* ((register-element (car (nthcdr iregister-current-text-register
-                                        (iregister-elements-with-strings))))
-         (register-name (car register-element)))
-    (set-register register-name nil)
-    (iregister-next-text)))
-
-(defun iregister-jump-to-current-marker ()
-  (interactive)
-  ;; (add-hook 'minibuffer-exit-hook 'multicur-minibuffer-exit-hook t)
-  (setq iregister-action 'jump)
-  (exit-minibuffer))
-
-(defun iregister-minibuffer-keyboard-quit ()
-  (interactive)
-  (remove-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook)
-  (minibuffer-keyboard-quit))
-
-(defun iregister-minibuffer-setup-hook ()
-  (interactive)
-  (when iregister-minibuffer-position
-    (goto-char iregister-minibuffer-position))
-  (setq iregister-minibuffer-position nil)
-  (recenter-top-bottom))
 
 (defun iregister-elements-with-markers ()
   (interactive)
@@ -150,25 +150,11 @@
         (setq result (cons item result))))
     result))
 
-(defun iregister-elements-with-strings ()
-  (interactive)
-  (let ((result (list)))
-    (dolist (item register-alist)
-      (when (stringp (cdr item))
-        (setq result (cons item result))))
-    result))
-
 (defun iregister-elements-with-markers-length ()
   (length (iregister-elements-with-markers)))
 
 (defun iregister-elements-with-markers-length-1 ()
   (- (iregister-elements-with-markers-length) 1))
-
-(defun iregister-elements-with-strings-length ()
-  (length (iregister-elements-with-strings)))
-
-(defun iregister-elements-with-strings-length-1 ()
-  (- (iregister-elements-with-strings-length) 1))
 
 (defun iregister-jump-to-next-marker ()
   (interactive)
@@ -229,6 +215,30 @@
         (iregister--jump-to-marker))
       (setq iregister-action nil))))
 
+;; Interactive registers with text
+
+(defun iregister-delete-text-register ()
+  (interactive)
+  (let* ((register-element (car (nthcdr iregister-current-text-register
+                                        (iregister-elements-with-strings))))
+         (register-name (car register-element)))
+    (set-register register-name nil)
+    (iregister-next-text)))
+
+(defun iregister-elements-with-strings ()
+  (interactive)
+  (let ((result (list)))
+    (dolist (item register-alist)
+      (when (stringp (cdr item))
+        (setq result (cons item result))))
+    result))
+
+(defun iregister-elements-with-strings-length ()
+  (length (iregister-elements-with-strings)))
+
+(defun iregister-elements-with-strings-length-1 ()
+  (- (iregister-elements-with-strings-length) 1))
+
 (defun iregister-copy-to-register (start end &optional delete-flag)
   "Copy region into the any empty register."
   (interactive "r\nP")
@@ -271,7 +281,6 @@
                                           (iregister-elements-with-strings))))
            (register-name (car register-element))
            (register-string (cdr register-element)))
-      ;; (add-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook t)
       (read-from-minibuffer
        ""
        register-string
@@ -307,10 +316,9 @@
 (defun iregister-save-text-to-register ()
   (interactive)
   (let ((register-element (car (nthcdr iregister-current-text-register
-                                          (iregister-elements-with-strings))))
-        (register-name (car register-element))))
-  (set-register register-name
-                (buffer-substring (point-min) (point-max))))
+                                       (iregister-elements-with-strings)))))
+    (set-register (car register-element)
+                  (buffer-substring (point-min) (point-max)))))
 
 
 (provide 'iregister)
