@@ -25,6 +25,8 @@ store current point to register. That command works exactly as `point-to-registe
 command but without any prompt, it just finds any empty register and stores there
 current point.
 
+![Jump to the markers interactivelly](https://raw.githubusercontent.com/atykhonov/temp/master/interactive-marker-registers.gif "Jump to the markers interactivelly")
+
 ###### Insert (append/prepend) interactivelly the texts stored in the registers.
 
 Assuming that there are already stored some texts (by means of `copy-to-register` or
