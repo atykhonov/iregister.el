@@ -29,7 +29,7 @@
 ;; This package is built on top of register.el package and it allows to use registers
 ;; interactively.
 ;;
-;; Jump to the markers (stored in the registers) interactivelly.
+;; Jump interactivelly to the markers stored in the registers.
 ;;
 ;; Assuming that there are already stored some points (by means of
 ;; `point-to-register' or `iregister-point-to-register' command) in the
@@ -44,10 +44,11 @@
 ;; quit from the minibuffer press `q' key (or C-g).
 ;;
 ;; Optionally you could use `iregister-point-to-register' command from any buffer to
-;; store current point to register.  That command executes without any prompt, it just
-;; finds any empty register and stores there current point.
+;; store current point to register. That command works exactly as `point-to-register'
+;; command but without any prompt, it just finds any empty register and stores there
+;; current point.
 ;; 
-;; Insert (append/prepend) the texts (stored in the registers) interactivelly.
+;; Insert (append/prepend) interactivelly the texts stored in the registers.
 ;;
 ;; Assuming that there are already stored some texts (by means of `copy-to-register'
 ;; or `iregister-copy-to-register' command) in the registers. Execute, for example,
@@ -59,6 +60,11 @@
 ;; hit `d' key to delete current text from the register. To quit from the minibuffer
 ;; press `q' key (or C-g). Also you could use `a' key for appending or `A' key for
 ;; prepending selected text to the current text registry.
+;;
+;; Optionally you could use `iregister-copy-to-register' command from any buffer to
+;; store selected text to a register. That command works exactly as
+;; `copy-to-register' command but without any prompt, it just finds any empty
+;; register and stores there selected text.
 ;;
 
 ;; Installation:
