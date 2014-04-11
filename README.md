@@ -48,15 +48,19 @@ selected text.
 Assuming that the file `iregister.el` is somewhere on the load path, add the
 following lines to your `.emacs` file:
 
+```
 (require 'iregister)
 (global-set-key (kbd "M-n") 'iregister-jump-to-next-marker)
 (global-set-key (kbd "M-p") 'iregister-jump-to-previous-marker)
 (global-set-key (kbd "M-u") 'iregister-point-or-text-to-register)
+```
 
 If region is active then `iregister-point-or-text-to-register` command stores a
 text to any empty register, otherwise it stores a point.
 
+```
 (global-set-key (kbd "M-l") 'iregister-text)
+```
 
 Change the key bindings to your liking.
 
