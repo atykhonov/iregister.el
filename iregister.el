@@ -51,8 +51,8 @@
 ;; Insert (append/prepend) interactivelly the texts stored in the registers.
 ;;
 ;; Assuming that there are already stored some texts (by means of `copy-to-register'
-;; or `iregister-copy-to-register' command) in the registers. Execute, for example,
-;; `iregister-next-text' and the minibuffer will display the text stored in some
+;; or `iregister-copy-to-register' command) in the registers. Execute
+;; `iregister-text' and the minibuffer will display the text stored in some
 ;; register. In the appeared minibuffer you can figure out whether is that right text
 ;; to be inserted or not. If yes, then just hit the `RET' and the text will be
 ;; inserted. If no, then try to hit `n' key or `p' key to view next/previous texts
