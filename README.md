@@ -7,7 +7,7 @@ iregister - Interactive register commands for Emacs.
 This package is built on top of register.el package and it allows to use registers
 interactively.
 
-###### Jump to the markers (stored in the registers) interactivelly.
+##### Jump to the markers (stored in the registers) interactivelly.
 
 Assuming that there are already stored some points (by means of `point-to-register`
 or `iregister-point-to-register` command) in the registers. Execute, for example,
@@ -27,7 +27,8 @@ current point.
 
 ![Jump to the markers interactivelly](https://raw.githubusercontent.com/atykhonov/temp/master/interactive-marker-registers.gif "Jump to the markers interactivelly")
 
-###### Insert (append/prepend) interactivelly the texts stored in the registers.
+
+##### Insert (append/prepend) interactivelly the texts stored in the registers.
 
 Assuming that there are already stored some texts (by means of `copy-to-register` or
 `iregister-copy-to-register` command) in the registers. Execute `iregister-text` and
@@ -44,6 +45,9 @@ Optionally you could use `iregister-copy-to-register` command from any buffer to
 store selected text to a register. That command works exactly as `copy-to-register`
 command but without any prompt, it just finds any empty register and stores there
 selected text.
+
+![Jump to the texts interactivelly](https://raw.githubusercontent.com/atykhonov/temp/master/interactive-text-registers.gif "Jump to the texts interactivelly")
+
 
 ### Installation
 
