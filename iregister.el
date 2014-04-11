@@ -189,6 +189,18 @@
         (iregister--jump-to-marker))
       (setq iregister-action nil))))
 
+(defun iregister-copy-to-register (start end &optional delete-flag)
+  "Copy region into the any empty register."
+  (interactive "r\nP")
+  (let ((idx 0)
+        (stored nil))
+    (while (and (< idx 256)
+                (null stored))
+      (when (null (get-register idx))
+        (setq stored t)
+        (copy-to-register idx start end))
+      (setq idx (+ idx 1)))))
+
 
 (provide 'iregister)
 
