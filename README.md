@@ -29,10 +29,12 @@ finds any empty register and stores there current point.
 Assuming that the file `iregister.el` is somewhere on the load path, add the
 following lines to your `.emacs` file:
 
+```
 (require 'iregister)
 (global-set-key (kbd "M-n") 'iregister-jump-to-next-marker)
 (global-set-key (kbd "M-p") 'iregister-jump-to-previous-marker)
 (global-set-key (kbd "M-u") 'iregister-point-to-register)
+```
 
 Change the key bindings to your liking.
 
