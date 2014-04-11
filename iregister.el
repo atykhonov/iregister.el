@@ -92,7 +92,6 @@ exit.")
 required to jump.")
 
 (defvar iregister-minibuffer-marker-keymap
-  "Keymap for the minibuffer when display a marker register."
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map)
     (define-key map "q" 'iregister-minibuffer-keyboard-quit)
@@ -102,10 +101,10 @@ required to jump.")
     (define-key map (kbd "n") 'iregister-jump-to-next-marker)
     (define-key map (kbd "p") 'iregister-jump-to-previous-marker)
     (define-key map (kbd "d") 'iregister-delete-marker-register)
-    map))
+    map)
+  "Keymap for the minibuffer when display a marker register.")
 
-(defvar iregister-minibuffer-text-keymap
-  "Keymap for minibuffer when display a text register."
+(defvar iregister-minibuffer-text-keymap  
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map)
     (define-key map "q" 'iregister-minibuffer-keyboard-quit)
@@ -118,7 +117,8 @@ required to jump.")
     (define-key map (kbd "A") 'iregister-prepend-text)
     (define-key map (kbd "d") 'iregister-delete-text-register)
     (define-key map (kbd "s") 'iregister-save-text-to-register)
-    map))
+    map)
+  "Keymap for minibuffer when display a text register.")
 
 
 
