@@ -141,12 +141,13 @@ required to jump.")
   (remove-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook)
   (minibuffer-keyboard-quit))
 
-(defun iregister-point-or-text-to-register ()
+(defun iregister-point-or-text-to-register (&optional delete-flag)
   "Store point or text to any empty register. If region is active
-then store a text, otherwise a point."
-  (interactive)
+then store a text, otherwise a point. With a `C-u' prefix
+argument, delete active region."
+  (interactive "P")
   (if (region-active-p)
-      (iregister-copy-to-register (region-beginning) (region-end))
+      (iregister-copy-to-register (region-beginning) (region-end) delete-flag)
     (iregister-point-to-register)))
 
 ;; Interactive registers with markers
@@ -310,7 +311,7 @@ retrieves from the registers."
                 (null stored))
       (when (null (get-register idx))
         (setq stored t)
-        (copy-to-register idx start end))
+        (copy-to-register idx start end delete-flag))
       (setq idx (+ idx 1)))))
 
 (defun iregister-next-text ()
