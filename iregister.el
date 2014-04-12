@@ -146,7 +146,7 @@ required to jump.")
 then store a text, otherwise a point."
   (interactive)
   (if (region-active-p)
-      (iregister-copy-to-register)
+      (iregister-copy-to-register (region-beginning) (region-end))
     (iregister-point-to-register)))
 
 ;; Interactive registers with markers
