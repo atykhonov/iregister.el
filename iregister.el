@@ -141,6 +141,7 @@ required to jump.")
   (remove-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook)
   (minibuffer-keyboard-quit))
 
+;;;###autoload
 (defun iregister-point-or-text-to-register (&optional delete-flag)
   "Store point or text to any empty register. If region is active
 then store a text, otherwise a point. With a `C-u' prefix
@@ -160,6 +161,7 @@ argument, delete active region."
   (setq iregister-minibuffer-position nil)
   (recenter-top-bottom))
 
+;;;###autoload
 (defun iregister-point-to-register ()
   "Find empty register and store current point to it.  Works
 exactly as `point-to-register' does work except it doesn't prompt
@@ -174,6 +176,7 @@ for register-name."
         (point-to-register idx))
       (setq idx (+ idx 1)))))
 
+;;;###autoload
 (defun iregister-jump-to-current-marker ()
   "Jump to the current marker from the minibuffer."
   (interactive)
@@ -206,6 +209,7 @@ markers."
 (defun iregister-elements-with-markers-length-1 ()
   (- (iregister-elements-with-markers-length) 1))
 
+;;;###autoload
 (defun iregister-jump-to-next-marker ()
   "If the minibuffer is the current buffer then jump to the next
 marker.  Otherwise show the minibuffer with the text arround next
@@ -221,6 +225,7 @@ marker.  Markers retrieves from the registers."
         (exit-minibuffer))
     (iregister--jump-to-marker)))
 
+;;;###autoload
 (defun iregister-jump-to-previous-marker ()
   "If the minibuffer is the current buffer then jump to the
 previous marker.  Otherwise show the minibuffer with the text
@@ -302,6 +307,7 @@ retrieves from the registers."
 (defun iregister-elements-with-strings-length-1 ()
   (- (iregister-elements-with-strings-length) 1))
 
+;;;###autoload
 (defun iregister-copy-to-register (start end &optional delete-flag)
   "Copy region into the any empty register."
   (interactive "r\nP")
@@ -314,6 +320,7 @@ retrieves from the registers."
         (copy-to-register idx start end delete-flag))
       (setq idx (+ idx 1)))))
 
+;;;###autoload
 (defun iregister-next-text ()
   "If the minibuffer is the current buffer then jump to the next
 text.  Otherwise show the minibuffer with the next text and allows
@@ -329,6 +336,7 @@ registers."
         (exit-minibuffer))
     (iregister-text)))
 
+;;;###autoload
 (defun iregister-previous-text ()
   "If the minibuffer is the current buffer then jump to the
 previous text.  Otherwise show the minibuffer with the previous text
@@ -344,6 +352,7 @@ from the registers."
         (exit-minibuffer))
     (iregister-text)))
 
+;;;###autoload
 (defun iregister-text ()
   "Show the minibuffer with the current text."
   (interactive)
