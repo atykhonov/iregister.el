@@ -69,6 +69,12 @@
 
 ;; Installation:
 
+;; From MELPA or Marmalade.
+
+;; Just run `M-x package-install RET iregister RET`
+
+;; Manual installation.
+
 ;; Assuming that the file `iregister.el' is somewhere on the load path, add the
 ;; following lines to your `.emacs' file:
 
