@@ -5,7 +5,7 @@
 ;; Author: Andrey Tykhonov <atykhonov@gmail.com>
 ;; Maintainer: Andrey Tykhonov <atykhonov@gmail.com>
 ;; URL: https://github.com/atykhonov/iregister.el
-;; Version: 0.4.0
+;; Version: 0.4.1
 ;; Keywords: convenience
 
 ;; This file is NOT part of GNU Emacs.
