@@ -91,7 +91,7 @@
 ;;
 ;; Instead of `C-u M-x iregister-append-to-latest-register' and `C-u C-u M-x
 ;; iregister-append-to-latest-register' you could use such functions as
-;; `iregister-delete-append-to-latest-register' and
+;; `iregister-append-to-latest-register-delete' and
 ;; `iregister-kill-append-to-latest-register'. These commands are useful to use with
 ;; key bindings.
 
@@ -409,7 +409,7 @@ kill selected text."
     (message "Region is not active.")))
 
 ;;;###autoload
-(defun iregister-delete-append-to-latest-register (start end)
+(defun iregister-append-to-latest-register-delete (start end)
   "Append selected text to the latest used register in the
 `iregister-copy-to-register' function. Delete selected text."
   (interactive "r")
