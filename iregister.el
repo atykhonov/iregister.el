@@ -192,7 +192,7 @@ kill active region. With a `C-u C-u C-u' prefix argument,
     (iregister-point-to-register)))
 
 ;;;###autoload
-(defun iregister-point-or-text-to-register-1 ()
+(defun iregister-point-or-text-to-register-kill-ring-save ()
   "Store point or text to any empty register. If region is active
 then store a text, otherwise a point. If region is active then
 perform `kill-ring-save' on it."
