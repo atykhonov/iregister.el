@@ -54,7 +54,7 @@ be `kill-ring-save` (See the documentation for the `kill-ring-save` function).
 
 Instead of `C-u M-x iregister-copy-to-register` or `C-u C-u M-x
 iregister-copy-to-register` or `C-u C-u C-u M-x iregister-copy-to-register` you could
-use such functions as `iregister-delete-copy-to-register`,
+use such functions as `iregister-copy-to-register-delete`,
 `iregister-copy-to-register-kill` and
 `iregister-copy-to-register-kill-ring-save`. These commands are useful to use with
 key bindings.

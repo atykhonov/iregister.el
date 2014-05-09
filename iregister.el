@@ -75,7 +75,7 @@
 ;;
 ;; Instead of `C-u M-x iregister-copy-to-register' or `C-u C-u M-x
 ;; iregister-copy-to-register' or `C-u C-u C-u M-x iregister-copy-to-register' you
-;; could use such functions as `iregister-delete-copy-to-register',
+;; could use such functions as `iregister-copy-to-register-delete',
 ;; `iregister-copy-to-register-kill' and
 ;; `iregister-copy-to-register-kill-ring-save'. These commands are useful to use with
 ;; key bindings.
@@ -371,7 +371,7 @@ kill selected text. With a `C-u C-u C-u' prefix argument
       (setq idx (+ idx 1)))))
 
 ;;;###autoload
-(defun iregister-delete-copy-to-register (start end)
+(defun iregister-copy-to-register-delete (start end)
   "Copy region into the any empty register and delete the region."
   (interactive "r")
   (iregister-copy-to-register start end '(4)))
