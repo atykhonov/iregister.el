@@ -74,8 +74,21 @@ iregister-append-to-latest-register` you could use such functions as
 `iregister-append-to-latest-register-kill`. These commands are useful to use with key
 bindings.
 
-![Jump to the texts interactivelly](https://raw.githubusercontent.com/atykhonov/temp/master/interactive-text-registers.gif "Jump to the texts interactivelly")
+![Jump to the texts interactivelly](https://raw.githubusercontent.com/atykhonov/temp/master/interactive-text-registers.gif
+ "Jump to the texts interactivelly")
 
+##### Utility functions
+
+There are also two helpful functions which you could use with some key binding:
+`iregister-point-or-text-to-register` and
+`iregister-point-or-text-to-register-kill-ring-save`. `iregister-point-or-text-to-register`
+function stores point to register in case of region is inactive, otherwise stores a
+text to register. `iregister-point-or-text-to-register-kill-ring-save` behaves mostly
+in the same way as `iregister-point-or-text-to-register` but it perform
+`kill-ring-save` on active region thus it save the text for a window system cut and
+paste. You can bind `iregister-point-or-text-to-register-kill-ring-save` to the `M-w`
+key and that would allow to `kill-ring-save` an active region and store it to the
+register.
 
 ### Installation
 
@@ -102,7 +115,15 @@ text to any empty register, otherwise it stores a point.
 (global-set-key (kbd "M-l") 'iregister-text)
 ```
 
-Change the key bindings to your liking.
+You can also try to bind `iregister' functions in the following way:
+
+```
+(global-set-key (kbd "M-w") 'iregister-point-or-text-to-register-kill-ring-save)
+(global-set-key (kbd "C-w") 'iregister-copy-to-register-kill)
+(global-set-key (kbd "M-y") 'iregister-text)
+```
+
+Anyway change the key bindings to your liking.
 
 ### Contribution
 
