@@ -381,6 +381,13 @@ kill selected text. With a `C-u C-u C-u' prefix argument
   (iregister-copy-to-register start end '(16)))
 
 ;;;###autoload
+(defun iregister-copy-to-register-kill-ring-save (start end)
+  "Copy region into the any empty register and `kill-ring-save'
+the region."
+  (interactive "r")
+  (iregister-copy-to-register start end '(64)))
+
+;;;###autoload
 (defun iregister-append-to-latest-register (start end &optional delete-flag)
   "Append selected text to the latest used register in the
 `iregister-copy-to-register' function. With a `C-u' prefix
