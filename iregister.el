@@ -66,6 +66,30 @@
 ;; `copy-to-register' command but without any prompt, it just finds any empty
 ;; register and stores there selected text.
 ;;
+;; If execute `C-u M-x iregister-copy-to-register' then selected text will be deleted
+;; without modifying the kill ring. In case of `C-u C-u M-x iregister-copy-to-register'
+;; the selected text will be deleted and saved in the kill ring and in a register as
+;; well.
+;;
+;; Instead of `C-u M-x iregister-copy-to-register' or `C-u C-u M-x
+;; iregister-copy-to-register' you could use such functions as
+;; `iregister-delete-copy-to-register' and `iregister-kill-copy-to-register'. These
+;; commands are useful to use with key bindings.
+;;
+;; The command `iregister-append-to-latest-register' allows to append selected text to
+;; the last used register. After execution of `iregister-copy-to-register' the command
+;; `iregister-append-to-latest-register' will append selected text to the same register.
+;;
+;; If execute `C-u M-x iregister-append-to-latest-register' the selected text will be
+;; deleted without modifying the kill ring. In case of `C-u C-u M-x
+;; iregister-append-to-latest-register' the selected text will be deleted and saved
+;; in the kill ring.
+;;
+;; Instead of `C-u M-x iregister-append-to-latest-register' and `C-u C-u M-x
+;; iregister-append-to-latest-register' you could use such functions as
+;; `iregister-delete-append-to-latest-register' and
+;; `iregister-kill-append-to-latest-register'. These commands are useful to use with
+;; key bindings.
 
 ;; Installation:
 
