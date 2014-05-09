@@ -92,7 +92,7 @@
 ;; Instead of `C-u M-x iregister-append-to-latest-register' and `C-u C-u M-x
 ;; iregister-append-to-latest-register' you could use such functions as
 ;; `iregister-append-to-latest-register-delete' and
-;; `iregister-kill-append-to-latest-register'. These commands are useful to use with
+;; `iregister-append-to-latest-register-kill'. These commands are useful to use with
 ;; key bindings.
 
 ;; Installation:
@@ -416,7 +416,7 @@ kill selected text."
   (iregister-append-to-latest-register start end '(4)))
 
 ;;;###autoload
-(defun iregister-kill-append-to-latest-register (start end)
+(defun iregister-append-to-latest-register-kill (start end)
   "Append selected text to the latest used register in the
 `iregister-copy-to-register' function. Kill selected text."
   (interactive "r")

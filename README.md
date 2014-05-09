@@ -71,7 +71,7 @@ the kill ring.
 Instead of `C-u M-x iregister-append-to-latest-register` and `C-u C-u M-x
 iregister-append-to-latest-register` you could use such functions as
 `iregister-append-to-latest-register-delete` and
-`iregister-kill-append-to-latest-register`. These commands are useful to use with key
+`iregister-append-to-latest-register-kill`. These commands are useful to use with key
 bindings.
 
 ![Jump to the texts interactivelly](https://raw.githubusercontent.com/atykhonov/temp/master/interactive-text-registers.gif "Jump to the texts interactivelly")
