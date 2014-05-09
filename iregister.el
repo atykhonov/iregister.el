@@ -191,6 +191,17 @@ kill active region. With a `C-u C-u C-u' prefix argument,
       (iregister-copy-to-register (region-beginning) (region-end) delete-flag)
     (iregister-point-to-register)))
 
+;;;###autoload
+(defun iregister-point-or-text-to-register-1 ()
+  "Store point or text to any empty register. If region is active
+then store a text, otherwise a point. If region is active then
+perform `kill-ring-save' on it."
+  (interactive)
+  (if (region-active-p)
+      (iregister-copy-to-register-kill-ring-save (region-beginning)
+                                                 (region-end))
+    (iregister-point-to-register)))
+
 ;; Interactive registers with markers
 
 (defun iregister-minibuffer-setup-hook ()
