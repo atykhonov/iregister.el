@@ -182,7 +182,8 @@ function.")
   "Store point or text to any empty register. If region is active
 then store a text, otherwise a point. With a `C-u' prefix
 argument, delete active region. With a `C-u C-u' prefix argument,
-kill active region."
+kill active region. With a `C-u C-u C-u' prefix argument,
+`kill-ring-save' active region."
   (interactive "P")
   (if (region-active-p)
       (iregister-copy-to-register (region-beginning) (region-end) delete-flag)
