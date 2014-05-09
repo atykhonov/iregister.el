@@ -49,7 +49,8 @@ selected text.
 If execute `C-u M-x iregister-copy-to-register` then selected text will be deleted
 without modifying the kill ring. In case of `C-u C-u M-x iregister-copy-to-register`
 the selected text will be deleted and saved in the kill ring and in a register as
-well.
+well. In case of `C-u C-u C-u M-x iregister-copy-to-register` the selected text will
+be `kill-ring-save` (See the documentation for the `kill-ring-save` function).
 
 Instead of `C-u M-x iregister-copy-to-register` or `C-u C-u M-x
 iregister-copy-to-register` you could use such functions as

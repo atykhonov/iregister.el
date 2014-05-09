@@ -67,9 +67,11 @@
 ;; register and stores there selected text.
 ;;
 ;; If execute `C-u M-x iregister-copy-to-register' then selected text will be deleted
-;; without modifying the kill ring. In case of `C-u C-u M-x iregister-copy-to-register'
-;; the selected text will be deleted and saved in the kill ring and in a register as
-;; well.
+;; without modifying the kill ring. In case of `C-u C-u M-x
+;; iregister-copy-to-register' the selected text will be deleted and saved in the
+;; kill ring and in a register as well. In case of `C-u C-u C-u M-x
+;; iregister-copy-to-register' the selected text will be `kill-ring-save' (See
+;; the documentation for the `kill-ring-save' function).
 ;;
 ;; Instead of `C-u M-x iregister-copy-to-register' or `C-u C-u M-x
 ;; iregister-copy-to-register' you could use such functions as
@@ -346,7 +348,8 @@ retrieves from the registers."
 (defun iregister-copy-to-register (start end &optional delete-flag)
   "Copy region into the any empty register. With a `C-u' prefix
 argument delete selected text. With a `C-u C-u' prefix argument
-kill selected text."
+kill selected text. With a `C-u C-u C-u' prefix argument
+`kill-ring-save' selected text."
   (interactive "r\nP")
   (let ((idx 0)
         (stored nil))
@@ -359,7 +362,9 @@ kill selected text."
         (when (equal delete-flag '(4))
           (delete-region start end))
         (when (equal delete-flag '(16))
-          (kill-region start end)))
+          (kill-region start end))
+        (when (equal delete-flag '(64))
+          (kill-ring-save start end)))
       (setq idx (+ idx 1)))))
 
 ;;;###autoload
