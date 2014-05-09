@@ -70,7 +70,7 @@ the kill ring.
 
 Instead of `C-u M-x iregister-append-to-latest-register` and `C-u C-u M-x
 iregister-append-to-latest-register` you could use such functions as
-`iregister-delete-append-to-latest-register` and
+`iregister-append-to-latest-register-delete` and
 `iregister-kill-append-to-latest-register`. These commands are useful to use with key
 bindings.
 
