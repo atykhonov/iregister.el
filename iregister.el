@@ -95,18 +95,18 @@
 ;; `iregister-append-to-latest-register-kill'. These commands are useful to use with
 ;; key bindings.
 ;;
-Utility functions
+;; Utility functions
 
-There are also two helpful functions which you could use with some key binding:
-`iregister-point-or-text-to-register' and
-`iregister-point-or-text-to-register-kill-ring-save'. `iregister-point-or-text-to-register'
-function stores point to register in case of region is inactive, otherwise stores
-a text to register. `iregister-point-or-text-to-register-kill-ring-save' behaves
-mostly in the same way as `iregister-point-or-text-to-register' but it perform
-`kill-ring-save' on active region thus it save the text for a window system cut
-and paste. You can bind `iregister-point-or-text-to-register-kill-ring-save' to
-the `M-w' key and that would allow to `kill-ring-save' an active region and store
-it to the register. In case of region is inactive it will store point to register.
+;; There are also two helpful functions which you could use with some key binding:
+;; `iregister-point-or-text-to-register' and
+;; `iregister-point-or-text-to-register-kill-ring-save'. `iregister-point-or-text-to-register'
+;; function stores point to register in case of region is inactive, otherwise stores
+;; a text to register. `iregister-point-or-text-to-register-kill-ring-save' behaves
+;; mostly in the same way as `iregister-point-or-text-to-register' but it perform
+;; `kill-ring-save' on active region thus it save the text for a window system cut
+;; and paste. You can bind `iregister-point-or-text-to-register-kill-ring-save' to
+;; the `M-w' key and that would allow to `kill-ring-save' an active region and store
+;; it to the register. In case of region is inactive it will store point to register.
 
 ;; Installation:
 
