@@ -94,6 +94,19 @@
 ;; `iregister-append-to-latest-register-delete' and
 ;; `iregister-append-to-latest-register-kill'. These commands are useful to use with
 ;; key bindings.
+;;
+Utility functions
+
+There are also two helpful functions which you could use with some key binding:
+`iregister-point-or-text-to-register' and
+`iregister-point-or-text-to-register-kill-ring-save'. `iregister-point-or-text-to-register'
+function stores point to register in case of region is inactive, otherwise stores
+a text to register. `iregister-point-or-text-to-register-kill-ring-save' behaves
+mostly in the same way as `iregister-point-or-text-to-register' but it perform
+`kill-ring-save' on active region thus it save the text for a window system cut
+and paste. You can bind `iregister-point-or-text-to-register-kill-ring-save' to
+the `M-w' key and that would allow to `kill-ring-save' an active region and store
+it to the register. In case of region is inactive it will store point to register.
 
 ;; Installation:
 
@@ -116,7 +129,13 @@
 
 ;; (global-set-key (kbd "M-l") 'iregister-text)
 ;;
-;; Change the key bindings to your liking.
+;; You can also try to bind `iregister' functions in the following way:
+;;
+;; (global-set-key (kbd "M-w") 'iregister-point-or-text-to-register-kill-ring-save)
+;; (global-set-key (kbd "C-w") 'iregister-copy-to-register-kill)
+;; (global-set-key (kbd "M-y") 'iregister-text)
+;;
+;; Anyway change the key bindings to your liking.
 
 ;;; Code:
 
