@@ -74,9 +74,11 @@
 ;; the documentation for the `kill-ring-save' function).
 ;;
 ;; Instead of `C-u M-x iregister-copy-to-register' or `C-u C-u M-x
-;; iregister-copy-to-register' you could use such functions as
-;; `iregister-delete-copy-to-register' and `iregister-kill-copy-to-register'. These
-;; commands are useful to use with key bindings.
+;; iregister-copy-to-register' or `C-u C-u C-u M-x iregister-copy-to-register' you
+;; could use such functions as `iregister-delete-copy-to-register',
+;; `iregister-kill-copy-to-register' and
+;; `iregister-copy-to-register-kill-ring-save'. These commands are useful to use with
+;; key bindings.
 ;;
 ;; The command `iregister-append-to-latest-register' allows to append selected text to
 ;; the last used register. After execution of `iregister-copy-to-register' the command
