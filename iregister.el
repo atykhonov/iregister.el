@@ -108,6 +108,10 @@ exit.")
   "Temp variable which holds a point position to which it is
 required to jump.")
 
+(defvar iregister-last-used-register nil
+  "A last used register in the `iregister-copy-to-register'
+function.")
+
 (defvar iregister-minibuffer-marker-keymap
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map)
@@ -315,7 +319,9 @@ retrieves from the registers."
 
 ;;;###autoload
 (defun iregister-copy-to-register (start end &optional delete-flag)
-  "Copy region into the any empty register."
+  "Copy region into the any empty register. With a `C-u' prefix
+argument delete selected text. With a `C-u C-u' prefix argument
+kill selected text."
   (interactive "r\nP")
   (let ((idx 0)
         (stored nil))
@@ -323,8 +329,58 @@ retrieves from the registers."
                 (null stored))
       (when (null (get-register idx))
         (setq stored t)
-        (copy-to-register idx start end delete-flag))
+        (setq iregister-last-used-register idx)
+        (copy-to-register idx start end)
+        (when (equal delete-flag '(4))
+          (delete-region start end))
+        (when (equal delete-flag '(16))
+          (kill-region start end)))
       (setq idx (+ idx 1)))))
+
+;;;###autoload
+(defun iregister-delete-copy-to-register (start end)
+  "Copy region into the any empty register and delete the region."
+  (interactive "r")
+  (iregister-copy-to-register start end '(4)))
+
+;;;###autoload
+(defun iregister-kill-copy-to-register (start end)
+  "Copy region into the any empty register and kill the region."
+  (interactive "r")
+  (iregister-copy-to-register start end '(16)))
+
+;;;###autoload
+(defun iregister-append-to-latest-register (start end &optional delete-flag)
+  "Append selected text to the latest used register in the
+`iregister-copy-to-register' function. With a `C-u' prefix
+argument delete selected text. With a `C-u C-u' prefix argument
+kill selected text."
+  (interactive "r\nP")
+  (if (region-active-p)
+      (if iregister-last-used-register
+          (progn
+            (append-to-register iregister-last-used-register
+                                start end)
+            (when (equal delete-flag '(4))
+              (delete-region start end))
+            (when (equal delete-flag '(16))
+              (kill-region start end)))
+        (message "No registers has been used within iregister.el."))
+    (message "Region is not active.")))
+
+;;;###autoload
+(defun iregister-delete-append-to-latest-register (start end)
+  "Append selected text to the latest used register in the
+`iregister-copy-to-register' function. Delete selected text."
+  (interactive "r")
+  (iregister-append-to-latest-register start end '(4)))
+
+;;;###autoload
+(defun iregister-kill-append-to-latest-register (start end)
+  "Append selected text to the latest used register in the
+`iregister-copy-to-register' function. Kill selected text."
+  (interactive "r")
+  (iregister-append-to-latest-register start end '(16)))
 
 ;;;###autoload
 (defun iregister-next-text ()
