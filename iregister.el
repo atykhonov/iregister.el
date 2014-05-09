@@ -127,13 +127,13 @@
 ;; If region is active then `iregister-point-or-text-to-register' command stores a
 ;; text to any empty register, otherwise it stores a point.
 
-;; (global-set-key (kbd "M-l") 'iregister-text)
+;; (global-set-key (kbd "M-l") 'iregister-latest-text)
 ;;
 ;; You can also try to bind `iregister' functions in the following way:
 ;;
 ;; (global-set-key (kbd "M-w") 'iregister-point-or-text-to-register-kill-ring-save)
 ;; (global-set-key (kbd "C-w") 'iregister-copy-to-register-kill)
-;; (global-set-key (kbd "M-y") 'iregister-text)
+;; (global-set-key (kbd "M-y") 'iregister-latest-text)
 ;;
 ;; Anyway change the key bindings to your liking.
 
@@ -181,6 +181,7 @@ function.")
     (define-key map (kbd "C-j") 'iregister-insert-text)
     (define-key map (kbd "n") 'iregister-next-text)
     (define-key map (kbd "p") 'iregister-previous-text)
+    (define-key map (kbd "l") 'iregister-latest-text)
     (define-key map (kbd "a") 'iregister-append-text)
     (define-key map (kbd "A") 'iregister-prepend-text)
     (define-key map (kbd "d") 'iregister-delete-text-register)
@@ -487,6 +488,20 @@ from the registers."
     (iregister-text)))
 
 ;;;###autoload
+(defun iregister-latest-text ()
+  "If the minibuffer is the current buffer then jump to the
+latest text. Otherwise show the minibuffer with the latest text
+and allows to select interactively required text. Texts retrieves
+from the registers."
+  (interactive)
+  (setq iregister-current-text-register (iregister-elements-with-strings-length-1))
+  (if (minibufferp)
+      (progn
+        (setq iregister-action 'latest)
+        (exit-minibuffer))
+    (iregister-text)))
+
+;;;###autoload
 (defun iregister-text ()
   "Show the minibuffer with the current text."
   (interactive)
@@ -510,7 +525,8 @@ from the registers."
       (when (equal iregister-action 'insert)
         (insert register-string))
       (when (or (equal iregister-action 'next)
-                (equal iregister-action 'previous))
+                (equal iregister-action 'previous)
+                (equal iregister-action 'latest))
         (iregister-text))
       (setq iregister-action nil))))
 

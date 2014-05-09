@@ -112,7 +112,7 @@ If region is active then `iregister-point-or-text-to-register` command stores a
 text to any empty register, otherwise it stores a point.
 
 ```
-(global-set-key (kbd "M-l") 'iregister-text)
+(global-set-key (kbd "M-l") 'iregister-latest-text)
 ```
 
 You can also try to bind `iregister' functions in the following way:
@@ -120,7 +120,7 @@ You can also try to bind `iregister' functions in the following way:
 ```
 (global-set-key (kbd "M-w") 'iregister-point-or-text-to-register-kill-ring-save)
 (global-set-key (kbd "C-w") 'iregister-copy-to-register-kill)
-(global-set-key (kbd "M-y") 'iregister-text)
+(global-set-key (kbd "M-y") 'iregister-latest-text)
 ```
 
 Anyway change the key bindings to your liking.
