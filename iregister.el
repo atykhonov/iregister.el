@@ -384,7 +384,9 @@ argument delete selected text. With a `C-u C-u' prefix argument
 kill selected text. With a `C-u C-u C-u' prefix argument
 `kill-ring-save' selected text."
   (interactive "r\nP")
-  (let ((idx 0)
+  (let ((idx (if iregister-last-used-register
+                 (+ iregister-last-used-register 1)
+               1))
         (stored nil))
     (while (and (< idx 256)
                 (null stored))
