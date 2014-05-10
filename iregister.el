@@ -567,6 +567,32 @@ from the registers."
     (set-register (car register-element)
                   (buffer-substring (point-min) (point-max)))))
 
+(defun iregister--shade-color (intensity)
+  "print the #rgb color of the background, dimmed according to intensity"
+  (interactive "nIntensity of the shade : ")
+  (apply 'format "#%02x%02x%02x" 
+         (mapcar (lambda (x)
+                   (if (> (lsh x -8) intensity)
+                       (- (lsh x -8) intensity)
+                     0))
+                 (color-values (cdr (assoc 'background-color (frame-parameters)))))))
+
+(defun iregister-list-text-registers ()
+  "List all text registers."
+  (interactive)
+  (let ((buffer-name "*iRegister: text registers*")
+        (inhibit-modification-hooks t))
+    (make-face 'iregister-temp-face)
+    (set-face-background 'iregister-temp-face (iregister-shade-color 15))
+    (set-face-attribute 'iregister-temp-face nil :height 0.3)
+    (with-output-to-temp-buffer (get-buffer-create buffer-name)
+      (dolist (item (reverse (iregister-elements-with-strings)))
+        (set-buffer buffer-name)
+        (insert (cdr item))
+        (insert "\n")
+        (let ((beg (point)))
+          (insert "\n")
+          (put-text-property beg (point) 'face 'iregister-temp-face))))))
 
 (provide 'iregister)
 
