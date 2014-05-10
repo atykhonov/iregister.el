@@ -597,6 +597,7 @@ from the registers."
                      0))
                  (color-values (cdr (assoc 'background-color (frame-parameters)))))))
 
+(defalias 'list-text-registers 'iregister-list-text-registers)
 (defun iregister-list-text-registers ()
   "List all text registers."
   (interactive)
