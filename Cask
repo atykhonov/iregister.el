@@ -1,2 +1,2 @@
-(package "iregister" "0.4.1"
+(package "iregister" "0.5.0"
          "Interactive register commands for Emacs.")
