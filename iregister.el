@@ -151,6 +151,9 @@
   "Temp variable to allow to take right action after minibuffer
 exit.")
 
+(defvar iregister-action-contents nil
+  "Temp variable which contains action contents.")
+
 (defvar iregister-minibuffer-position nil
   "Temp variable which holds a point position to which it is
 required to jump.")
@@ -197,6 +200,20 @@ limit registers to max character value.")
     (define-key map (kbd "A") 'iregister-prepend-text)
     (define-key map (kbd "d") 'iregister-delete-text-register)
     (define-key map (kbd "s") 'iregister-save-text-to-register)
+    map)
+  "Keymap for minibuffer when display a text register.")
+
+(defvar iregister-list-registers-keymap
+  (let ((map (make-sparse-keymap)))
+    (suppress-keymap map)
+    (define-key map "q" 'iregister-minibuffer-keyboard-quit)
+    (define-key map (kbd "C-g") 'iregister-minibuffer-keyboard-quit)
+    (define-key map (kbd "RET") 'iregister-list-text-registers-insert)
+    (define-key map (kbd "C-j") 'iregister-list-text-registers-insert)
+    (define-key map (kbd "n") 'iregister-list-text-registers-next-register)
+    (define-key map (kbd "p") 'iregister-list-text-registers-previous-register)
+    (define-key map (kbd "i") 'iregister-list-text-registers-insert)
+    (define-key map (kbd "d") 'iregister-list-text-registers-delete-register)
     map)
   "Keymap for minibuffer when display a text register.")
 
@@ -580,24 +597,108 @@ from the registers."
 (defun iregister-list-text-registers ()
   "List all text registers."
   (interactive)
-  (let ((buffer-name "*iRegister: text registers*")
+  (let ((buffer-name (get-buffer-create "*iRegister: text registers*"))
         (inhibit-modification-hooks t))
     (make-face 'iregister-temp-face)
     (set-face-background 'iregister-temp-face (iregister-shade-color 15))
     (set-face-attribute 'iregister-temp-face nil :height 0.3)
-    (with-output-to-temp-buffer (get-buffer-create buffer-name)
-      (dolist (item (reverse (iregister-elements-with-strings)))
-        (set-buffer buffer-name)
-        (let ((beg (point)))
-          (insert (cdr item))
-          (put-text-property beg (point) 'current-point beg)
-          (put-text-property beg (point) 'next-point (+ (point) 2)))
-        (insert "\n")
-        (let ((beg (point)))
-          (insert "\n")
-          (put-text-property beg (point) 'face 'iregister-temp-face))))))
+    (add-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook t)
+    (read-from-minibuffer
+     ""
+     (with-temp-buffer
+       (dolist (item (reverse (iregister-elements-with-strings)))
+         (let ((ov-start ov-end overlay)
+               (register (car item)))
+           (setq ov-start (point))
+           (let ((beg (point)))
+             (insert (cdr item))
+             (put-text-property beg (point) 'current-point beg)
+             (put-text-property beg (point) 'next-point (+ (point) 2))
+             (put-text-property beg (point) 'register register))
+           (insert "\n")
+           (let ((beg (point)))
+             (insert "\n")
+             (setq ov-end (point))
+             (put-text-property beg (point) 'face 'iregister-temp-face))
+           (put-text-property ov-start ov-end 'reg-beg ov-start)
+           (put-text-property ov-start ov-end 'reg-end ov-end)
+           (put-text-property ov-start ov-end 'register register)
+           (setq overlay (make-overlay ov-start ov-end))
+           (overlay-put overlay 'register register)))
+       (setq iregister-minibuffer-position 1)
+       (buffer-substring (point-min) (point-max)))
+     iregister-list-registers-keymap)
+    (when (equal iregister-action 'insert)
+      (insert iregister-action-contents))
+    (when (equal iregister-action 'delete)
+      (iregister-list-text-registers))))
+
+(defun iregister-list-text-registers-next-register ()
+  (interactive)
+  (let ((found nil)
+        (previous-register nil)
+        (current-register nil)
+        (idx 0)
+        (register-position nil)
+        (registers-list (iregister-elements-with-strings)))
+    (while (and (< idx (length registers-list))
+                (null found))
+      (setq previous-register current-register)
+      (setq current-register (car (nth idx registers-list)))
+      (when (eq current-register (get-text-property (point) 'register))
+        (setq found t))
+      (setq idx (+ idx 1)))
+    (if previous-register
+        (progn
+          (setq register-position (text-property-any (point-min) (point-max) 'register previous-register))
+          (when register-position
+            (goto-char register-position)))
+      (goto-char (point-min)))))
+
+(defun iregister-list-text-registers-previous-register ()
+  (interactive)
+  (let ((found nil)
+        (previous-register nil)
+        (current-register nil)
+        (idx 0)
+        (register-position nil)
+        (registers-list (reverse (iregister-elements-with-strings))))
+    (while (and (< idx (length registers-list))
+                (null found))
+      (setq previous-register current-register)
+      (setq current-register (car (nth idx registers-list)))
+      (when (eq current-register (get-text-property (point) 'register))
+        (setq found t))
+      (setq idx (+ idx 1)))
+    (if previous-register
+        (progn
+          (setq register-position (text-property-any (point-min) (point-max) 'register previous-register))
+          (when register-position
+            (goto-char register-position)))
+      (goto-char (point-max))
+      (forward-line -2))))
+
+(defun iregister-list-text-registers-insert ()
+  "Insert to the buffer a text from the current text register."
+  (interactive)
+  (let* ((register (get-text-property (point) 'register))
+         (register-contents (cdr (assoc register register-alist))))
+    (setq iregister-action 'insert)
+    (setq iregister-action-contents register-contents)
+    (exit-minibuffer)))
+
+(defun iregister-list-text-registers-delete-register ()
+  "Delete current text marker from the list registers."
+  (interactive)
+  (let* ((register (get-text-property (point) 'register))
+         (start (text-property-any (point-min) (point-max) 'register register))
+         (end (text-property-not-all start (point-max) 'register register)))
+    (set-register register nil)
+    (delete-region start (+ end 2))
+    (when (eobp)
+      (forward-line -2))))
+
 
 (provide 'iregister)
 
 ;;; iregister.el ends here
-
