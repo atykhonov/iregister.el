@@ -159,6 +159,17 @@ required to jump.")
   "A last used register in the `iregister-copy-to-register'
 function.")
 
+(defvar iregister-min-register 128
+  "Codes 0 through 127 are ASCII codes; the rest are
+non-ASCII. Let's use for the registers storing only non-ASCII
+codes as ASCII codes may be used by a user so it would be better
+do not intersect.")
+
+(defvar iregister-max-register 4194303
+  "Characters in strings and buffers are currently limited to the
+range of 0 to 4194303. As registers stores as a character let's
+limit registers to max character value.")
+
 (defvar iregister-minibuffer-marker-keymap
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map)
@@ -238,9 +249,9 @@ perform `kill-ring-save' on it."
 exactly as `point-to-register' does work except it doesn't prompt
 for register-name."
   (interactive)
-  (let ((idx 0)
+  (let ((idx iregister-min-register)
         (stored nil))
-    (while (and (< idx 256)
+    (while (and (< idx iregister-max-register)
                 (null stored))
       (when (null (get-register idx))
         (setq stored t)
@@ -387,9 +398,9 @@ kill selected text. With a `C-u C-u C-u' prefix argument
   (interactive "r\nP")
   (let ((idx (if iregister-last-used-register
                  (+ iregister-last-used-register 1)
-               1))
+               iregister-min-register))
         (stored nil))
-    (while (and (< idx 256)
+    (while (and (< idx iregister-max-register)
                 (null stored))
       (when (null (get-register idx))
         (setq stored t)
