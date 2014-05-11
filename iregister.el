@@ -608,7 +608,7 @@ from the registers."
   (let ((buffer-name (get-buffer-create "*iRegister: text registers*"))
         (inhibit-modification-hooks t))
     (make-face 'iregister-temp-face)
-    (set-face-background 'iregister-temp-face (iregister-shade-color 15))
+    (set-face-background 'iregister-temp-face (iregister--shade-color 15))
     (set-face-attribute 'iregister-temp-face nil :height 0.3)
     (add-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook t)
     (read-from-minibuffer
