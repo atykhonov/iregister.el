@@ -535,7 +535,7 @@ from the registers."
   "Show the minibuffer with the current text."
   (interactive)
   (when (= (iregister-elements-with-strings-length) 0)
-    (message "No more registers with strings."))
+    (message "There are not text registers."))
   (when (> (iregister-elements-with-strings-length) 0)
     (let* ((register-element (car (nthcdr iregister-current-text-register
                                           (iregister-elements-with-strings))))
