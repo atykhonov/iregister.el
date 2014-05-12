@@ -200,7 +200,6 @@ limit registers to max character value.")
     (define-key map (kbd "a") 'iregister-append-text)
     (define-key map (kbd "A") 'iregister-prepend-text)
     (define-key map (kbd "d") 'iregister-delete-text-register)
-    (define-key map (kbd "s") 'iregister-save-text-to-register)
     map)
   "Keymap for minibuffer when display a text register.")
 
@@ -578,14 +577,6 @@ from the registers."
   (interactive)
   (setq iregister-action 'insert)
   (exit-minibuffer))
-
-(defun iregister-save-text-to-register ()
-  "Save minibuffer contents to the current register."
-  (interactive)
-  (let ((register-element (car (nthcdr iregister-current-text-register
-                                       (iregister-elements-with-strings)))))
-    (set-register (car register-element)
-                  (buffer-substring (point-min) (point-max)))))
 
 (defun iregister--shade-color (intensity)
   "print the #rgb color of the background, dimmed according to intensity"
