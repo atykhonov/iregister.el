@@ -345,7 +345,7 @@ required marker.  Markers retrieves from the registers."
   "Show minibuffer with a text arround current marker. Marker
 retrieves from the registers."
   (when (= (iregister-elements-with-markers-length) 0)
-    (message "No more registers."))
+    (message "There are not any point registers."))
   (when (> (iregister-elements-with-markers-length) 0)
     (let* ((register-element (car (nthcdr iregister-current-marker-register
                                           (iregister-elements-with-markers))))
@@ -535,7 +535,7 @@ from the registers."
   "Show the minibuffer with the current text."
   (interactive)
   (when (= (iregister-elements-with-strings-length) 0)
-    (message "There are not text registers."))
+    (message "There are not any text registers."))
   (when (> (iregister-elements-with-strings-length) 0)
     (let* ((register-element (car (nthcdr iregister-current-text-register
                                           (iregister-elements-with-strings))))
