@@ -629,50 +629,46 @@ from the registers."
       (when (equal iregister-action 'delete)
         (iregister-list-text-registers)))))
 
-(defun iregister-list-text-registers-next-register ()
-  (interactive)
+(defun iregister-list-text-registers-to-register (direction)
+  "Move to the next register in the list if direction equal 1 and
+move to the previous register in the list if direction equal -1."
   (let ((found nil)
         (previous-register nil)
         (current-register nil)
         (idx 0)
         (register-position nil)
-        (registers-list (iregister-elements-with-strings)))
-    (while (and (< idx (length registers-list))
-                (null found))
-      (setq previous-register current-register)
-      (setq current-register (car (nth idx registers-list)))
-      (when (eq current-register (get-text-property (point) 'register))
-        (setq found t))
-      (setq idx (+ idx 1)))
-    (if previous-register
-        (progn
-          (setq register-position (text-property-any (point-min) (point-max) 'register previous-register))
-          (when register-position
-            (goto-char register-position)))
-      (goto-char (point-min)))))
+        (registers-list (if (eq direction -1)
+                            (reverse (iregister-elements-with-strings))
+                          (iregister-elements-with-strings)))))
+  (when (eq direction -1)
+    (setq ))
+  (while (and (< idx (length registers-list))
+              (null found))
+    (setq previous-register current-register)
+    (setq current-register (car (nth idx registers-list)))
+    (when (eq current-register (get-text-property (point) 'register))
+      (setq found t))
+    (setq idx (+ idx 1)))
+  (if previous-register
+      (progn
+        (setq register-position (text-property-any (point-min) (point-max) 'register previous-register))
+        (when register-position
+          (goto-char register-position)))
+    (if (eq direction 1)
+        (goto-char (point-min))
+      (progn
+        (goto-char (point-max))
+        (forward-line -2)))))
+
+(defun iregister-list-text-registers-next-register ()
+  "Move cursor to the next register in the list."
+  (interactive)
+  (iregister-list-text-registers-to-register 1))
 
 (defun iregister-list-text-registers-previous-register ()
+  "Move cursor to the previous register in the list"
   (interactive)
-  (let ((found nil)
-        (previous-register nil)
-        (current-register nil)
-        (idx 0)
-        (register-position nil)
-        (registers-list (reverse (iregister-elements-with-strings))))
-    (while (and (< idx (length registers-list))
-                (null found))
-      (setq previous-register current-register)
-      (setq current-register (car (nth idx registers-list)))
-      (when (eq current-register (get-text-property (point) 'register))
-        (setq found t))
-      (setq idx (+ idx 1)))
-    (if previous-register
-        (progn
-          (setq register-position (text-property-any (point-min) (point-max) 'register previous-register))
-          (when register-position
-            (goto-char register-position)))
-      (goto-char (point-max))
-      (forward-line -2))))
+  (iregister-list-text-registers-to-register -1))
 
 (defun iregister-list-text-registers-insert ()
   "Insert to the buffer a text from the current text register."
