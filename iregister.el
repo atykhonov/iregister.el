@@ -639,26 +639,26 @@ move to the previous register in the list if direction equal -1."
         (register-position nil)
         (registers-list (if (eq direction -1)
                             (reverse (iregister-elements-with-strings))
-                          (iregister-elements-with-strings)))))
-  (when (eq direction -1)
-    (setq ))
-  (while (and (< idx (length registers-list))
-              (null found))
-    (setq previous-register current-register)
-    (setq current-register (car (nth idx registers-list)))
-    (when (eq current-register (get-text-property (point) 'register))
-      (setq found t))
-    (setq idx (+ idx 1)))
-  (if previous-register
-      (progn
-        (setq register-position (text-property-any (point-min) (point-max) 'register previous-register))
-        (when register-position
-          (goto-char register-position)))
-    (if (eq direction 1)
-        (goto-char (point-min))
-      (progn
-        (goto-char (point-max))
-        (forward-line -2)))))
+                          (iregister-elements-with-strings))))
+    (when (eq direction -1)
+      (setq ))
+    (while (and (< idx (length registers-list))
+                (null found))
+      (setq previous-register current-register)
+      (setq current-register (car (nth idx registers-list)))
+      (when (eq current-register (get-text-property (point) 'register))
+        (setq found t))
+      (setq idx (+ idx 1)))
+    (if previous-register
+        (progn
+          (setq register-position (text-property-any (point-min) (point-max) 'register previous-register))
+          (when register-position
+            (goto-char register-position)))
+      (if (eq direction 1)
+          (goto-char (point-min))
+        (progn
+          (goto-char (point-max))
+          (forward-line -2))))))
 
 (defun iregister-list-text-registers-next-register ()
   "Move cursor to the next register in the list."
