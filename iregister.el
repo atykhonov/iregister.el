@@ -686,7 +686,10 @@ move to the previous register in the list if direction equal -1."
          (start (text-property-any (point-min) (point-max) 'register register))
          (end (text-property-not-all start (point-max) 'register register)))
     (set-register register nil)
-    (delete-region start (+ end 2))
+    (if (null end)
+        (setq end (point-max))
+      (setq end (+ end 2)))
+    (delete-region start end)
     (when (eobp)
       (forward-line -2))))
 
