@@ -691,7 +691,9 @@ move to the previous register in the list if direction equal -1."
       (setq end (+ end 2)))
     (delete-region start end)
     (when (eobp)
-      (forward-line -2))))
+      (forward-line -2))
+    (when (= (length (iregister-elements-with-strings)) 0)
+      (exit-minibuffer))))
 
 
 (provide 'iregister)
