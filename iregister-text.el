@@ -143,10 +143,6 @@
 
 (require 'iregister-core)
 
-(defvar iregister-deferred-insert-call
-  '(iregister-deferred-minibuffer-call '(lambda ()
-                                          (insert register-string)))
-  "")
 
 (defvar iregister-minibuffer-text-keymap  
   (let ((map (make-sparse-keymap)))
@@ -308,18 +304,6 @@ from the registers."
         (exit-minibuffer))
     (iregister-text)))
 
-(defvar iregister-deferred-call "")
-
-(defun iregister-deferred-minibuffer-call (function)
-  (if (minibufferp)
-      (progn
-        (setq iregister-deferred-call function)
-        (exit-minibuffer))
-    (funcall iregister-deferred-call)))
-
-(defun iregister-text-minibuffer (contents keymap deferred-calls)
-  )
-
 (defun iregister-----text ()
   "Show the minibuffer with the current text."
   (interactive)
@@ -330,9 +314,6 @@ from the registers."
                                           (iregister-elements-with-strings))))
            (register-name (car register-element))
            (register-string (cdr register-element)))
-      ;; (iregister-text-minibuffer register-string
-      ;;                            iregister-minibuffer-text-keymap
-      ;;                            )
       (read-from-minibuffer
        ""
        register-string
@@ -351,7 +332,6 @@ from the registers."
         (iregister-text))
       (when (equal iregister-action 'list-text-registers)
         (iregister-list-text-registers))
-      ;; (funcall iregister-deferred-call)
       (setq iregister-action nil))))
 
 ;;;###autoload
