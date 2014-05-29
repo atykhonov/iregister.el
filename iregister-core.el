@@ -141,6 +141,18 @@
 
 
 
+(defcustom iregister-max-mini-window-height 0.75
+  "Maximum height for resizing mini-windows (the minibuffer and the echo area).
+If nil, maximum height depends from `max-mini-window-height'
+variable. If a float, it specifies a fraction of the mini-window
+frame's height. If an integer, it specifies a number of lines.
+
+Actually, when none nil, iregister sets specified value to the
+`max-mini-window-height' variable and after minibuffer exit
+returns original value."
+  :group 'iregister-core
+  :type '(integer))
+
 (defvar iregister-min-register 128
   "Codes 0 through 127 are ASCII codes; the rest are
 non-ASCII. Let's use for the registers storing only non-ASCII
@@ -163,18 +175,38 @@ exit.")
 (defvar iregister-last-used-register nil
   "The last used register.")
 
+(defvar iregister-max-mini-window-height-orig nil
+  "Preserves value of `max-mini-window-height' to restore after
+minibuffer exit.")
+
 (defun iregister-minibuffer-setup-hook ()
   "Setup hook to be triggered after entering minibuffer."
   (interactive)
+  (when iregister-max-mini-window-height
+    (setq iregister-max-mini-window-height-orig max-mini-window-height)
+    (setq max-mini-window-height iregister-max-mini-window-height))
   (when iregister-minibuffer-position
     (goto-char iregister-minibuffer-position))
   (setq iregister-minibuffer-position nil)
   (recenter-top-bottom))
 
+(defun iregister-minibuffer-exit-hook ()
+  "Exit hook to be triggered after exit minibuffer."
+  (interactive)
+  (iregister--restore-max-mini-window-height))
+
+(defun iregister--restore-max-mini-window-height ()
+  (when (and iregister-max-mini-window-height
+             iregister-max-mini-window-height-orig)
+    (setq iregister-max-mini-window-height-orig nil)
+    (setq max-mini-window-height iregister-max-mini-window-height-orig)))
+
 (defun iregister-minibuffer-keyboard-quit ()
   "A thin wrapper arround `minibuffer-keyboard-quit'."
   (interactive)
   (remove-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook)
+  (remove-hook 'minibuffer-exit-hook 'iregister-minibuffer-exit-hook)
+  (iregister--restore-max-mini-window-height)
   (minibuffer-keyboard-quit))
 
 

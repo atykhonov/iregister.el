@@ -246,6 +246,7 @@ retrieves from the registers."
            (buffer-to-switch (marker-buffer register-marker))
            (position (marker-position register-marker)))
       (add-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook t)
+      (add-hook 'minibuffer-exit-hook 'iregister-minibuffer-exit-hook t)
       (read-from-minibuffer
        ""
        (let ((buffer-content nil)
