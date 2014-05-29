@@ -246,6 +246,7 @@ retrieves from the registers."
            (buffer-to-switch (marker-buffer register-marker))
            (position (marker-position register-marker)))
       (add-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook t)
+      (add-hook 'minibuffer-setup-hook 'iregister-point-minibuffer-setup-hook t)
       (add-hook 'minibuffer-exit-hook 'iregister-minibuffer-exit-hook t)
       (read-from-minibuffer
        ""
@@ -273,6 +274,14 @@ retrieves from the registers."
                 (equal iregister-action 'previous))
         (iregister--jump-to-marker))
       (setq iregister-action nil))))
+
+(defun iregister-point-minibuffer-setup-hook ()
+  "Setup hook to be triggered after entering minibuffer."
+  (interactive)
+  (when iregister-minibuffer-position
+    (goto-char iregister-minibuffer-position))
+  (setq iregister-minibuffer-position nil)
+  (recenter-top-bottom))
 
 (provide 'iregister-point)
 ;;; iregister-point.el ends here
