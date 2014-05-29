@@ -184,11 +184,7 @@ minibuffer exit.")
   (interactive)
   (when iregister-max-mini-window-height
     (setq iregister-max-mini-window-height-orig max-mini-window-height)
-    (setq max-mini-window-height iregister-max-mini-window-height))
-  (when iregister-minibuffer-position
-    (goto-char iregister-minibuffer-position))
-  (setq iregister-minibuffer-position nil)
-  (recenter-top-bottom))
+    (setq max-mini-window-height iregister-max-mini-window-height)))
 
 (defun iregister-minibuffer-exit-hook ()
   "Exit hook to be triggered after exit minibuffer."
