@@ -139,13 +139,58 @@
 
 ;;; Code:
 
-(require 'iregister-core)
-(require 'iregister-point)
-(require 'iregister-text)
-(require 'iregister-list-text)
-(require 'iregister-utils)
+
+
+(defvar iregister-min-register 128
+  "Codes 0 through 127 are ASCII codes; the rest are
+non-ASCII. Let's use for the registers storing only non-ASCII
+codes as ASCII codes may be used by a user so it would be better
+do not intersect.")
+
+(defvar iregister-max-register 4194303
+  "Characters in strings and buffers are currently limited to the
+range of 0 to 4194303. As registers stores as a character let's
+limit registers to max character value.")
+
+(defvar iregister-minibuffer-position nil
+  "Temp variable which holds a point position to which it is
+required to jump.")
+
+(defvar iregister-action nil
+  "Temp variable to allow to take right action after minibuffer
+exit.")
+
+(defvar iregister-last-used-register nil
+  "The last used register.")
+
+(defun iregister-minibuffer-setup-hook ()
+  "Setup hook to be triggered after entering minibuffer."
+  (interactive)
+  (when iregister-minibuffer-position
+    (goto-char iregister-minibuffer-position))
+  (setq iregister-minibuffer-position nil)
+  (recenter-top-bottom))
+
+(defun iregister-minibuffer-keyboard-quit ()
+  "A thin wrapper arround `minibuffer-keyboard-quit'."
+  (interactive)
+  (remove-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook)
+  (minibuffer-keyboard-quit))
 
 
-(provide 'iregister)
+(defun iregister-next-free-register ()
+  "Return next free (empty) register."
+  (let ((idx (if iregister-last-used-register
+                 (+ iregister-last-used-register 1)
+               iregister-min-register))
+        (free-register nil))
+    (while (and (< idx iregister-max-register)
+                (null free-register))
+      (when (null (get-register idx))
+        (setq free-register idx))
+      (setq idx (+ idx 1)))
+    free-register))
 
-;;; iregister.el ends here
+
+(provide 'iregister-core)
+;;; iregister-core.el ends here

@@ -139,13 +139,33 @@
 
 ;;; Code:
 
-(require 'iregister-core)
+
+
 (require 'iregister-point)
 (require 'iregister-text)
-(require 'iregister-list-text)
-(require 'iregister-utils)
 
+;;;###autoload
+(defun iregister-point-or-text-to-register (&optional delete-flag)
+  "Store point or text to any empty register. If region is active
+then store a text, otherwise a point. With a `C-u' prefix
+argument, delete active region. With a `C-u C-u' prefix argument,
+kill active region. With a `C-u C-u C-u' prefix argument,
+`kill-ring-save' active region."
+  (interactive "P")
+  (if (region-active-p)
+      (iregister-copy-to-register (region-beginning) (region-end) delete-flag)
+    (iregister-point-to-register)))
 
-(provide 'iregister)
+;;;###autoload
+(defun iregister-point-or-text-to-register-kill-ring-save ()
+  "Store point or text to any empty register. If region is active
+then store a text, otherwise a point. If region is active then
+perform `kill-ring-save' on it."
+  (interactive)
+  (if (region-active-p)
+      (iregister-copy-to-register-kill-ring-save (region-beginning)
+                                                 (region-end))
+    (iregister-point-to-register)))
 
-;;; iregister.el ends here
+(provide 'iregister-utils)
+;;; iregister-utils.el ends here

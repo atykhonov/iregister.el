@@ -139,13 +139,138 @@
 
 ;;; Code:
 
+
+
 (require 'iregister-core)
-(require 'iregister-point)
-(require 'iregister-text)
-(require 'iregister-list-text)
-(require 'iregister-utils)
 
+(defvar iregister-minibuffer-marker-keymap
+  (let ((map (make-sparse-keymap)))
+    (suppress-keymap map)
+    (define-key map "q" 'iregister-minibuffer-keyboard-quit)
+    (define-key map (kbd "C-g") 'iregister-minibuffer-keyboard-quit)
+    (define-key map (kbd "RET") 'iregister-jump-to-current-marker)
+    (define-key map (kbd "C-j") 'iregister-jump-to-current-marker)
+    (define-key map (kbd "n") 'iregister-jump-to-next-marker)
+    (define-key map (kbd "p") 'iregister-jump-to-previous-marker)
+    (define-key map (kbd "d") 'iregister-delete-marker-register)
+    map)
+  "Keymap for the minibuffer when display a marker register.")
 
-(provide 'iregister)
+(defvar iregister-current-marker-register 0
+  "An index to the current marker register.")
 
-;;; iregister.el ends here
+;;;###autoload
+(defun iregister-point-to-register ()
+  "Find empty register and store current point to it.  Works
+exactly as `point-to-register' does work except it doesn't prompt
+for register-name."
+  (interactive)
+  (let ((register (iregister-next-free-register)))
+    (point-to-register register)))
+
+;;;###autoload
+(defun iregister-jump-to-current-marker ()
+  "Jump to the current marker from the minibuffer."
+  (interactive)
+  (setq iregister-action 'jump)
+  (exit-minibuffer))
+
+(defun iregister-delete-marker-register ()
+  "Delete the current marker from the register."
+  (interactive)
+  (let* ((register-element (car (nthcdr iregister-current-marker-register
+                                        (iregister-elements-with-markers))))
+         (register-name (car register-element)))
+    (set-register register-name nil)
+    (iregister-jump-to-next-marker)))
+
+(defun iregister-elements-with-markers ()
+  "Retrieve all elements from the register which contain
+markers."
+  (interactive)
+  (let ((result (list)))
+    (dolist (item register-alist)
+      (when (markerp (cdr item))
+        (setq result (cons item result))))
+    result))
+
+(defun iregister-elements-with-markers-length ()
+  "Length of the list with marker elements."
+  (length (iregister-elements-with-markers)))
+
+(defun iregister-elements-with-markers-length-1 ()
+  (- (iregister-elements-with-markers-length) 1))
+
+;;;###autoload
+(defun iregister-jump-to-next-marker ()
+  "If the minibuffer is the current buffer then jump to the next
+marker.  Otherwise show the minibuffer with the text arround next
+marker and allows to select interactively required
+marker.  Markers retrieves from the registers."
+  (interactive)
+  (setq iregister-current-marker-register (+ iregister-current-marker-register 1))
+  (when (> iregister-current-marker-register (iregister-elements-with-markers-length-1))
+    (setq iregister-current-marker-register 0))
+  (if (minibufferp)
+      (progn
+        (setq iregister-action 'next)
+        (exit-minibuffer))
+    (iregister--jump-to-marker)))
+
+;;;###autoload
+(defun iregister-jump-to-previous-marker ()
+  "If the minibuffer is the current buffer then jump to the
+previous marker.  Otherwise show the minibuffer with the text
+arround previous marker and allows to select interactively
+required marker.  Markers retrieves from the registers."
+  (interactive)
+  (setq iregister-current-marker-register (- iregister-current-marker-register 1))
+  (when (< iregister-current-marker-register 0)
+    (setq iregister-current-marker-register (iregister-elements-with-markers-length-1)))
+  (if (minibufferp)
+      (progn
+        (setq iregister-action 'previous)
+        (exit-minibuffer))
+    (iregister--jump-to-marker)))
+
+(defun iregister--jump-to-marker ()
+  "Show minibuffer with a text arround current marker. Marker
+retrieves from the registers."
+  (when (= (iregister-elements-with-markers-length) 0)
+    (message "There are not any point registers."))
+  (when (> (iregister-elements-with-markers-length) 0)
+    (let* ((register-element (car (nthcdr iregister-current-marker-register
+                                          (iregister-elements-with-markers))))
+           (register-name (car register-element))
+           (register-marker (cdr register-element))
+           (buffer-to-switch (marker-buffer register-marker))
+           (position (marker-position register-marker)))
+      (add-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook t)
+      (read-from-minibuffer
+       ""
+       (let ((buffer-content nil)
+             (start-point nil)
+             (end-point nil))
+         (with-current-buffer buffer-to-switch
+           (save-excursion
+             (goto-char position)
+             (forward-line -20)
+             (beginning-of-line)
+             (setq start-point (point))
+             (setq iregister-minibuffer-position (+ (- position start-point) 1)))
+           (save-excursion
+             (goto-char position)
+             (forward-line 20)
+             (beginning-of-line)
+             (setq end-point (point)))
+           (buffer-substring start-point end-point)))
+       iregister-minibuffer-marker-keymap)
+      (when (equal iregister-action 'jump)
+        (register-to-point register-name))
+      (when (or (equal iregister-action 'next)
+                (equal iregister-action 'previous))
+        (iregister--jump-to-marker))
+      (setq iregister-action nil))))
+
+(provide 'iregister-point)
+;;; iregister-point.el ends here
