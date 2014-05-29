@@ -205,6 +205,8 @@ minibuffer exit.")
   "A thin wrapper arround `minibuffer-keyboard-quit'."
   (interactive)
   (remove-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook)
+  (remove-hook 'minibuffer-setup-hook 'iregister-text-minibuffer-setup-hook)
+  (remove-hook 'minibuffer-setup-hook 'iregister-point-minibuffer-setup-hook)
   (remove-hook 'minibuffer-exit-hook 'iregister-minibuffer-exit-hook)
   (iregister--restore-max-mini-window-height)
   (minibuffer-keyboard-quit))
