@@ -366,6 +366,7 @@ from the registers."
            (register-name (car register-element))
            (register-string (cdr register-element)))
       (add-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook t)
+      (add-hook 'minibuffer-setup-hook 'iregister-text-minibuffer-setup-hook t)
       (add-hook 'minibuffer-exit-hook 'iregister-minibuffer-exit-hook t)
       (read-from-minibuffer
        ""
@@ -405,6 +406,9 @@ from the registers."
   (setq iregister-action 'insert)
   (exit-minibuffer))
 
+(defun iregister-text-minibuffer-setup-hook ()
+  (interactive)
+  (beginning-of-buffer))
 
 (provide 'iregister-text)
 ;;; iregister-text.el ends here
