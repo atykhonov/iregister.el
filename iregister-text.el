@@ -271,7 +271,7 @@ registers."
   (if (minibufferp)
       (progn
         (setq iregister-action 'next)
-        (exit-minibuffer))
+        (iregister-exit-minibuffer))
     (iregister-text)))
 
 ;;;###autoload
@@ -287,7 +287,7 @@ from the registers."
   (if (minibufferp)
       (progn
         (setq iregister-action 'previous)
-        (exit-minibuffer))
+        (iregister-exit-minibuffer))
     (iregister-text)))
 
 ;;;###autoload
@@ -301,7 +301,7 @@ from the registers."
   (if (minibufferp)
       (progn
         (setq iregister-action 'latest)
-        (exit-minibuffer))
+        (iregister-exit-minibuffer))
     (iregister-text)))
 
 (defun iregister-----text ()
@@ -372,19 +372,19 @@ from the registers."
   "Append selected text to the current text register."
   (interactive)
   (setq iregister-action 'append)
-  (exit-minibuffer))
+  (iregister-exit-minibuffer))
 
 (defun iregister-prepend-text ()
   "Prepend selected text to the current text register."
   (interactive)
   (setq iregister-action 'prepend)
-  (exit-minibuffer))
+  (iregister-exit-minibuffer))
 
 (defun iregister-insert-text ()
   "Insert to the buffer a text from the current text register."
   (interactive)
   (setq iregister-action 'insert)
-  (exit-minibuffer))
+  (iregister-exit-minibuffer))
 
 (defun iregister-text-minibuffer-setup-hook ()
   (interactive)

@@ -173,7 +173,7 @@ for register-name."
   "Jump to the current marker from the minibuffer."
   (interactive)
   (setq iregister-action 'jump)
-  (exit-minibuffer))
+  (iregister-exit-minibuffer))
 
 (defun iregister-delete-marker-register ()
   "Delete the current marker from the register."
@@ -214,7 +214,7 @@ marker.  Markers retrieves from the registers."
   (if (minibufferp)
       (progn
         (setq iregister-action 'next)
-        (exit-minibuffer))
+        (iregister-exit-minibuffer))
     (iregister--jump-to-marker)))
 
 ;;;###autoload
@@ -230,7 +230,7 @@ required marker.  Markers retrieves from the registers."
   (if (minibufferp)
       (progn
         (setq iregister-action 'previous)
-        (exit-minibuffer))
+        (iregister-exit-minibuffer))
     (iregister--jump-to-marker)))
 
 (defun iregister--jump-to-marker ()

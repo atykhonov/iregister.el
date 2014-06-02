@@ -197,16 +197,26 @@ minibuffer exit.")
     (setq iregister-max-mini-window-height-orig nil)
     (setq max-mini-window-height iregister-max-mini-window-height-orig)))
 
-(defun iregister-minibuffer-keyboard-quit ()
-  "A thin wrapper arround `minibuffer-keyboard-quit'."
+(defun iregister-remove-hooks ()
+  "Remove hooks add by iregister."
   (interactive)
   (remove-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook)
   (remove-hook 'minibuffer-setup-hook 'iregister-text-minibuffer-setup-hook)
   (remove-hook 'minibuffer-setup-hook 'iregister-point-minibuffer-setup-hook)
-  (remove-hook 'minibuffer-exit-hook 'iregister-minibuffer-exit-hook)
+  (remove-hook 'minibuffer-exit-hook 'iregister-minibuffer-exit-hook))
+
+(defun iregister-minibuffer-keyboard-quit ()
+  "A thin wrapper arround `minibuffer-keyboard-quit'."
+  (interactive)
+  (iregister-remove-hooks)
   (iregister--restore-max-mini-window-height)
   (minibuffer-keyboard-quit))
 
+(defun iregister-exit-minibuffer ()
+  (interactive)
+  (iregister-remove-hooks)
+  (iregister--restore-max-mini-window-height)
+  (exit-minibuffer))
 
 (defun iregister-next-free-register ()
   "Return next free (empty) register."

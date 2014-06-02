@@ -177,7 +177,7 @@
   (when (minibufferp)
     (progn
       (setq iregister-action 'list-text-registers)
-      (exit-minibuffer)))
+      (iregister-exit-minibuffer)))
   (if (= (length (iregister-elements-with-strings)) 0)
       (message "There are not any text registers.")
     (let ((buffer-name (get-buffer-create "*iRegister: text registers*"))
@@ -258,7 +258,7 @@ move to the previous register in the list if direction equal -1."
          (register-contents (cdr (assoc register register-alist))))
     (setq iregister-action 'insert)
     (setq iregister-action-contents register-contents)
-    (exit-minibuffer)))
+    (iregister-exit-minibuffer)))
 
 (defun iregister-list-text-registers-delete-register ()
   "Delete current text marker from the list registers."
@@ -274,7 +274,7 @@ move to the previous register in the list if direction equal -1."
     (when (eobp)
       (forward-line -2))
     (when (= (length (iregister-elements-with-strings)) 0)
-      (exit-minibuffer))))
+      (iregister-exit-minibuffer))))
 
 (provide 'iregister-list-text)
 ;;; iregister-list-text.el ends here
