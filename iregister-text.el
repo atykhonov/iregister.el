@@ -304,36 +304,6 @@ from the registers."
         (iregister-exit-minibuffer))
     (iregister-text)))
 
-(defun iregister-----text ()
-  "Show the minibuffer with the current text."
-  (interactive)
-  (when (= (iregister-elements-with-strings-length) 0)
-    (message "There are not any text registers."))
-  (when (> (iregister-elements-with-strings-length) 0)
-    (let* ((register-element (car (nthcdr iregister-current-text-register
-                                          (iregister-elements-with-strings))))
-           (register-name (car register-element))
-           (register-string (cdr register-element)))
-      (read-from-minibuffer
-       ""
-       register-string
-       iregister-minibuffer-text-keymap)
-      (when (equal iregister-action 'append)
-        (append-to-register register-name (region-beginning) (region-end))
-        (iregister-text))
-      (when (equal iregister-action 'prepend)
-        (prepend-to-register register-name (region-beginning) (region-end))
-        (iregister-text))
-      (when (equal iregister-action 'insert)
-        (insert register-string))
-      (when (or (equal iregister-action 'next)
-                (equal iregister-action 'previous)
-                (equal iregister-action 'latest))
-        (iregister-text))
-      (when (equal iregister-action 'list-text-registers)
-        (iregister-list-text-registers))
-      (setq iregister-action nil))))
-
 ;;;###autoload
 (defun iregister-text ()
   "Show the minibuffer with the current text."
