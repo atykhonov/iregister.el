@@ -161,9 +161,9 @@
 
 ;;;###autoload
 (defun iregister-point-to-register ()
-  "Find empty register and store current point to it.  Works
-exactly as `point-to-register' does work except it doesn't prompt
-for register-name."
+  "Find empty register and store current point to it. Works
+exactly as `point-to-register' except it doesn't prompt for
+register-name."
   (interactive)
   (let ((register (iregister-next-free-register)))
     (point-to-register register)))
