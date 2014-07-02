@@ -186,6 +186,7 @@
       (set-face-background 'iregister-temp-face (iregister--shade-color 15))
       (set-face-attribute 'iregister-temp-face nil :height 0.3)
       (add-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook t)
+      (add-hook 'minibuffer-setup-hook 'iregister-list-text-minibuffer-setup-hook t)
       (add-hook 'minibuffer-exit-hook 'iregister-minibuffer-exit-hook t)
       (read-from-minibuffer
        ""
@@ -277,6 +278,11 @@ move to the previous register in the list if direction equal -1."
       (forward-line -2))
     (when (= (length (iregister-elements-with-strings)) 0)
       (iregister-exit-minibuffer))))
+
+(defun iregister-list-text-minibuffer-setup-hook ()
+  "Setup hook to be triggered after entering minibuffer."
+  (interactive)
+  (goto-char 0))
 
 (provide 'iregister-list-text)
 ;;; iregister-list-text.el ends here
