@@ -256,13 +256,13 @@ retrieves from the registers."
          (with-current-buffer buffer-to-switch
            (save-excursion
              (goto-char position)
-             (forward-line -20)
+             (forward-line -80)
              (beginning-of-line)
              (setq start-point (point))
              (setq iregister-minibuffer-position (+ (- position start-point) 1)))
            (save-excursion
              (goto-char position)
-             (forward-line 20)
+             (forward-line 80)
              (beginning-of-line)
              (setq end-point (point)))
            (buffer-substring start-point end-point)))
