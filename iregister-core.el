@@ -149,7 +149,7 @@ frame's height. If an integer, it specifies a number of lines.
 
 Actually, when none nil, iregister sets specified value to the
 `max-mini-window-height' variable and after minibuffer exit
-returns original value."
+restores original value."
   :group 'iregister-core
   :type '(integer))
 
