@@ -198,11 +198,12 @@ minibuffer exit.")
     (setq max-mini-window-height iregister-max-mini-window-height-orig)))
 
 (defun iregister-remove-hooks ()
-  "Remove hooks add by iregister."
+  "Remove all iregister hooks."
   (interactive)
   (remove-hook 'minibuffer-setup-hook 'iregister-minibuffer-setup-hook)
   (remove-hook 'minibuffer-setup-hook 'iregister-text-minibuffer-setup-hook)
   (remove-hook 'minibuffer-setup-hook 'iregister-point-minibuffer-setup-hook)
+  (remove-hook 'minibuffer-setup-hook 'iregister-list-text-minibuffer-setup-hook)
   (remove-hook 'minibuffer-exit-hook 'iregister-minibuffer-exit-hook))
 
 (defun iregister-minibuffer-keyboard-quit ()
