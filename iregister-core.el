@@ -172,6 +172,9 @@ required to jump.")
   "Temp variable to allow to take right action after minibuffer
 exit.")
 
+(defvar iregister-action-args nil
+  "Action arguments.")
+
 (defvar iregister-last-used-register nil
   "The last used register.")
 

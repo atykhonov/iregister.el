@@ -172,8 +172,14 @@ register-name."
 (defun iregister-jump-to-current-marker ()
   "Jump to the current marker from the minibuffer."
   (interactive)
-  (setq iregister-action 'jump)
-  (iregister-exit-minibuffer))
+  (let ((position-diff nil))
+    (setq iregister-action 'jump)
+
+    (when iregister-minibuffer-position
+      (setq position-diff (- (point) iregister-minibuffer-position)))
+  
+    (setq iregister-action-args (list position-diff))
+    (iregister-exit-minibuffer)))
 
 (defun iregister-delete-marker-register ()
   "Delete the current marker from the register."
@@ -269,6 +275,9 @@ retrieves from the registers."
        iregister-minibuffer-marker-keymap)
       (when (equal iregister-action 'jump)
         (register-to-point register-name)
+        (when iregister-action-args
+          (goto-char (+ (point) (nth 0 iregister-action-args))))
+        (setq iregister-action-args nil)
         (recenter-top-bottom))
       (when (or (equal iregister-action 'next)
                 (equal iregister-action 'previous))
