@@ -273,7 +273,8 @@ for register-name."
       (when (null (get-register idx))
         (setq stored t)
         (point-to-register idx))
-      (setq idx (+ idx 1)))))
+      (setq idx (+ idx 1))))
+  (message "Point register saved."))
 
 ;;;###autoload
 (defun iregister-jump-to-current-marker ()
